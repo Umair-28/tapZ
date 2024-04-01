@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TagController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +24,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/signUp', [AuthController::class, 'signUp']);
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware(['auth:sanctum'])->post('/add-tag', [TagController::class, 'addTag']);
+
+Route::get('/tagById/{id}', [TagController::class, 'getTagById']);
+Route::get('/tagByCategory/{category}', [TagController::class, 'getTagsByCategory']);
+Route::get('/getAllTags', [TagController::class, 'getAllTags']);
+
+
+// Route::get('/tag/pet/{id}', [TagController::class, 'getSpecificPet']);
+// Route::get('/tag/kid/{id}', [TagController::class, 'getSpecificKid']);
+// Route::get('/tag/luggage/{id}', [TagController::class, 'getSpecificLuggage']);
