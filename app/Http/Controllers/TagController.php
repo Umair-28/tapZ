@@ -17,57 +17,57 @@ class TagController extends Controller
 {
     public function addTag(Request $request)
     {
-        // $user = $request->user();
-        // $userEmail = $user->email;
+        $user = $request->user();
+        $userEmail = $user->email;
 
-        // $account = Account::where('email', $userEmail)->first();
-        // $userId = $account->id;
+        $account = Account::where('email', $userEmail)->first();
+        $userId = $account->id;
 
-        // $validator = Validator::make($request->all(), [
-        //     'category' => 'required|in:pet,kid,luggage',
-        //     'name' => $request->category === 'luggage' ? "nullable" : "required|string",
-        //     'ownerName' => $request->category === "kid" ? "nullable" : "required",
-        //     'gender' => $request->category === 'luggage' ? "nullable" : "required|in:male,female",
-        //     'age' => $request->category === 'luggage' ? "nullable" : "required",
-        //     'medicalIssue' => $request->category === 'luggage' ? "nullable" : "required",
-        //     'height' => $request->category === 'kid' ? "required" : "nullable",
-        //     'weight' => $request->category === 'pet' ? "required" : "nullable",
-        //     'color' => $request->category === 'pet' ? "required" : "nullable",
-        //     'dressColor' => $request->category === 'kid' ? "required" : "nullable",
-        //     'vetDetail' => $request->category === 'pet' ? "required" : "nullable",
-        //     'brand' => $request->category === 'luggage' ? "required" : "nullable",
-        //     'luggageType' => $request->category === 'luggage' ? "required" : "nullable",
-        //     'reward' => "required|string",
-        //     'mobileNumber' => "required|string",
-        //     'mobileNumber2' => "string|nullable",
-        //     'contactEmail' => "required|email",
-        //     'address' => "required|string",
-        //     'note' => "string|nullable"
+        $validator = Validator::make($request->all(), [
+            'category' => 'required|in:pet,kid,luggage',
+            'name' => $request->category === 'luggage' ? "nullable" : "required|string",
+            'ownerName' => $request->category === "kid" ? "nullable" : "required",
+            'gender' => $request->category === 'luggage' ? "nullable" : "required|in:male,female",
+            'age' => $request->category === 'luggage' ? "nullable" : "required",
+            'medicalIssue' => $request->category === 'luggage' ? "nullable" : "required",
+            'height' => $request->category === 'kid' ? "required" : "nullable",
+            'weight' => $request->category === 'pet' ? "required" : "nullable",
+            'color' => $request->category === 'pet' ? "required" : "nullable",
+            'dressColor' => $request->category === 'kid' ? "required" : "nullable",
+            'vetDetail' => $request->category === 'pet' ? "required" : "nullable",
+            'brand' => $request->category === 'luggage' ? "required" : "nullable",
+            'luggageType' => $request->category === 'luggage' ? "required" : "nullable",
+            'reward' => "required|string",
+            'mobileNumber' => "required|string",
+            'mobileNumber2' => "string|nullable",
+            'contactEmail' => "required|email",
+            'address' => "required|string",
+            'note' => "string|nullable"
 
-        // ]);
+        ]);
 
-        // if ($validator->fails()) {
-        //     $firstErrorMessage = $validator->errors()->first();
-        //     return response()->json(['status' => false, 'message' => $firstErrorMessage], 400);
-        // }
+        if ($validator->fails()) {
+        
+            return response()->json(['status' => false, 'message' => $validator->error()->first()], 422);
+        }
 
- 
+        $tag = new Tag();
+        $tag->userId = $userId;
+        $data = $request->all();
+        $columns = Schema::getColumnListing('tags_category');
 
+        foreach ($data as $key => $value) {
 
-        // $tag = new Tag();
-        // $tag->userId = $userId;
-        // $data = $request->all();
-        // $columns = Schema::getColumnListing('tags_category');
+            if (in_array($key, $columns)) {
 
-        // foreach ($data as $key => $value) {
-        //     if (in_array($key, $columns)) {
+                $tag->$key = $value;
+            }
+        }
 
-        //         // Assign the value to the corresponding property if the column exists
-        //         $tag->$key = $value;
-        //     }
-        // }
+        $tag->save();
 
-        // $tag->save();
+        // Saving the Uploaded Images and their path in Database //
+
         foreach($request->images as $image)
         {
             $fileName = Str::random(8) . '_' . time() . '.' . $image->getClientOriginalExtension();
