@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('contactEmail')->default("")->nullable();
             $table->string('reward')->default("")->nullable();
             $table->string('vetDetail')->default("")->nullable();
+            $table->string('doctorDetail')->default("")->nullable();
             $table->string('medicalIssue')->default("")->nullable();
             $table->string('note')->default("")->nullable();
             $table->string('category')->default("")->nullable();

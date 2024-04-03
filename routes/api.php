@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\OtpController;
 
 
 /*
@@ -25,6 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/account/create', [AuthController::class, 'signUp']);
 Route::post('/account/login', [AuthController::class, 'login']);
 
+Route::middleware('auth:sanctum')->delete('/account/delete/{id}', [AuthController::class, 'deleteAccount']);
+
 
 
 Route::prefix('tag')->middleware(['auth:sanctum'])->group(function () {
@@ -34,5 +37,26 @@ Route::prefix('tag')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/getById/{id}', [TagController::class, 'getTagById']);
     Route::get('/getByCategory/{category}', [TagController::class, 'getTagsByCategory']);
     Route::get('/getAllTags', [TagController::class, 'getAllTags']);
+  
 });
+
+Route::post('/forgot-password', [OtpController::class, 'generateOTP']);
+Route::post('/reset-password', [OtpController::class, 'resetPassword']);
+
+
+Route::get('/unauthenticated', function(){
+
+    return response([
+        'status'=> false,
+        "message" => "unauthenticated"
+    ], 401);
+})->name('unauthenticated');
+
+Route::any('{any}', function(){  // will work as fallback route 
+    return response()->json([
+        'status'    => false,
+        'message'   => 'Route Not Found.',
+    ], 404);
+})->where('any', '.*');
+
 

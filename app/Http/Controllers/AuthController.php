@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Tag;
 use App\Models\Account;
+use App\Models\Image;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -56,7 +59,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), $validationRules);
 
         if ($validator->fails()) {
-            return response()->json(["status" => false, "message" => $validator->errors()->first()], 422);
+            return response()->json(["status" => false, "message" => $validator->errors()->first()], 400);
         }
 
         $user = Account::where('email', $request->email)->first();
@@ -73,13 +76,42 @@ class AuthController extends Controller
 
             } else {
 
-                return response()->json(["status"=>false, "message"=>"Email or password is not Correct"]);
+                return response()->json(["status"=>false, "message"=>"Password is not Correct"],401);
             }
 
         } else {
 
-            return response()->json(["status"=>false, "message"=>"Email or password is not Correct"]);
+            return response()->json(["status"=>false, "message"=>"Email is not Correct"],401);
         }
+    }
+
+    public function deleteAccount($id){
+
+        $user = Auth::user();
+        if(!$user){
+            return response()->json(["status"=>false, "message"=>"Not Authorized"]);
+        }
+
+        $account = Account::find($id);
+        if($account){
+            $tags = Tag::where('userId',$account->id)->get();
+            $tagImages = Image::where("tagId", $account->id)->get();
+
+            foreach($tagImages as $image){
+                Storage::delete('public/uploads/'. basename($image->path));
+                $image->delete();
+            }
+
+            foreach($tags as $tag){
+                $tag->delete();
+            }
+
+            $account->delete();
+
+            return response()->json(['status' => true, 'message' => 'Account and associated images deleted successfully']);
+        }
+
+        return response()->json(["status"=>false, "message"=> "user not found"],404);
     }
 
 }

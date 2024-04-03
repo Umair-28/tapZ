@@ -10,49 +10,49 @@ use Illuminate\Support\Str;
 use App\Models\Account;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 
 class TagController extends Controller
 {
     public function addTag(Request $request)
     {
-        $user = $request->user();
-        $userEmail = $user->email;
+        $user = Auth::user();
+        // dd($user);
+        $userId = $user->id;
+   
+        // $validator = Validator::make($request->all(), [
+        //     'category' => 'required|in:pet,kid,luggage',
+        //     'name' => $request->category === 'luggage' ? "nullable" : "required|string",
+        //     'ownerName' => $request->category === "kid" ? "nullable" : "required",
+        //     'gender' => $request->category === 'luggage' ? "nullable" : "required|in:male,female",
+        //     'age' => $request->category === 'luggage' ? "nullable" : "required",
+        //     'medicalIssue' => $request->category === 'luggage' ? "nullable" : "required",
+        //     'height' => $request->category === 'kid' ? "required" : "nullable",
+        //     'weight' => $request->category === 'pet' ? "required" : "nullable",
+        //     'color' => $request->category === 'pet' ? "required" : "nullable",
+        //     'dressColor' => $request->category === 'kid' ? "required" : "nullable",
+        //     'vetDetail' => $request->category === 'pet' ? "required" : "nullable",
+        //     // 'doctorDetail' => $request->category === 'kid' ? 'required' :"nullable",
+        //     'brand' => $request->category === 'luggage' ? "required" : "nullable",
+        //     'luggageType' => $request->category === 'luggage' ? "required" : "nullable",
+        //     'reward' => "required|string",
+        //     'mobileNumber' => "required|string",
+        //     'mobileNumber2' => "string|nullable",
+        //     'contactEmail' => "required|email",
+        //     'address' => "required|string",
+        //     'note' => "string|nullable",
+        //     // 'images' => 'nullable|array'
 
-        $account = Account::where('email', $userEmail)->first();
-        $userId = $account->id;
+        // ]);
 
-        $validator = Validator::make($request->all(), [
-            'category' => 'required|in:pet,kid,luggage',
-            'name' => $request->category === 'luggage' ? "nullable" : "required|string",
-            'ownerName' => $request->category === "kid" ? "nullable" : "required",
-            'gender' => $request->category === 'luggage' ? "nullable" : "required|in:male,female",
-            'age' => $request->category === 'luggage' ? "nullable" : "required",
-            'medicalIssue' => $request->category === 'luggage' ? "nullable" : "required",
-            'height' => $request->category === 'kid' ? "required" : "nullable",
-            'weight' => $request->category === 'pet' ? "required" : "nullable",
-            'color' => $request->category === 'pet' ? "required" : "nullable",
-            'dressColor' => $request->category === 'kid' ? "required" : "nullable",
-            'vetDetail' => $request->category === 'pet' ? "required" : "nullable",
-            'brand' => $request->category === 'luggage' ? "required" : "nullable",
-            'luggageType' => $request->category === 'luggage' ? "required" : "nullable",
-            'reward' => "required|string",
-            'mobileNumber' => "required|string",
-            'mobileNumber2' => "string|nullable",
-            'contactEmail' => "required|email",
-            'address' => "required|string",
-            'note' => "string|nullable"
-
-        ]);
-
-        if ($validator->fails()) {
+        // if ($validator->fails()) {
         
-            return response()->json(['status' => false, 'message' => $validator->error()->first()], 422);
-        }
+        //     return response()->json(['status' => false, 'message' => $validator->error()->first()], 422);
+        // }
 
         $tag = new Tag();
-        $tag->userId = $userId;
+        
         $data = $request->all();
         $columns = Schema::getColumnListing('tags_category');
 
@@ -63,21 +63,45 @@ class TagController extends Controller
                 $tag->$key = $value;
             }
         }
-
+        $tag->userId = $userId;
+        // dd($tag);
         $tag->save();
 
         // Saving the Uploaded Images and their path in Database //
 
-        foreach($request->images as $image)
-        {
-            $fileName = Str::random(8) . '_' . time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('uploads', $fileName, 'public');
+        // if ($request->hasFile('images') && is_array($request->file('images')) && count($request->file('images')) > 0) {
+            if ($request->images) {
 
-             Image::create([
-                'path' => $path,
-                'tagId' => 1,
-           ]);
+            // foreach ($request->images as $image) {
+            //     // Validate each image
+            //     $validator = Validator::make(
+            //         ['image' => $image],
+            //         ['image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'] // Adjust the validation rules as needed
+            //     );
+        
+            //     if ($validator->fails()) {
+            //         // Handle validation errors
+            //         return response()->json(['status' => false, 'message' => "image validation fails"], 422);
+            //     }
+            // }
+        
+            // All images are valid, proceed to store them
+             foreach ($request->images as $image) {
+
+                $fileName = Str::random(8) . '_' . time() . '.' . $image['imageUrl']->getClientOriginalExtension();
+                $path = $image->storeAs('uploads', $fileName, 'public');
+        
+                // Create a database record for each stored image
+                Image::create([
+                    'path' => $path,
+                    'tagId' => $tag->id,
+                ]);
+            }
+        } else {
+            // Handle if no images were uploaded
+            return response()->json(['status' => false, 'message' => 'No images uploaded'], 422);
         }
+        
 
         return response()->json(["status" => true, "message" => "Data inserted Successfully"]);
     }
@@ -89,7 +113,7 @@ class TagController extends Controller
         }
     
         $formattedData = [];
-        $imagesArray = [];
+        // $imagesArray = [];
     
         // Get tags by category
         $tags = Tag::where('category', $cat)->get();
@@ -98,11 +122,11 @@ class TagController extends Controller
         foreach ($tags as $tag) {
             // Format the tag data
             $formattedRecord = $this->formatChecker($tag);
-            $formattedData[] = $formattedRecord;
+            
     
             // Get the first image for the tag
             $image = Image::where('tagId', $tag->id)->first();
-    
+            $url = "";
             // If image exists, add its URL to the images array
             if ($image) {
                 $storagePath = $image->path;
@@ -112,14 +136,16 @@ class TagController extends Controller
                 // If no image found, add null to the images array
                 $imagesArray[] = null;
             }
+            $formattedRecord->images = [$url];
+            $formattedData[] = $formattedRecord;
         }
     
         return response()->json(
             [
                 "status" => true,
                 'message' => "Data successfully fetched",
-                '$data' => $formattedData,
-                'image' => $imagesArray
+                'data' => $formattedData,
+                // 'image' => $imagesArray
             ],
             200
         );
@@ -132,31 +158,32 @@ class TagController extends Controller
     
         if ($data) {
             $imagesArray = [];
-            $images = Image::where('tagId',$data->id)->get();
-            foreach($images as $img)
-            {
-                if($img->path != "")
-                {
-                    $storagePath =  $img->path;
+            $images = Image::where('tagId', $data->id)->get();
+            
+            foreach ($images as $img) {
+                if ($img->path != "") {
+                    $storagePath = $img->path;
                     $url = url('storage/' . $storagePath);
-                    //dd($url);
-                    // Add the URL to the images array
-                    $imagesArray[] = $url;
+                    $imagesArray[] = [
+                        'id' => $img->id,
+                        'imageUrl' => $url
+                    ];
+                }
             }
+            
             $record = $this->formatChecker($data);
-
+    
             return response()->json(
                 [
                     "status" => true,
                     'message' => "Record Found",
                     "data" => $record,
                     "images" => $imagesArray
-
                 ],
                 200
             );
         }
-
+    
         return response()->json(
             [
                 "status" => false,
@@ -165,7 +192,7 @@ class TagController extends Controller
             404
         );
     }
-}
+    
 
     public function getAllTags()
     {
@@ -194,9 +221,7 @@ class TagController extends Controller
             "luggage" => $luggageArray
         ];
 
-        return response()->json(
-
-            [
+        return response()->json([
                 "status" => true,
                 'message' => "Data successfully fetched",
                 'data' => $combinedData
@@ -250,6 +275,34 @@ class TagController extends Controller
         if($tag){
             $tag->userId = $userId;
             $tag->update($request->all());
+
+            //processing images
+
+            $imageData = $request->input('images', []);
+            $updatedImageIds = [];
+
+            foreach ($imageData as $image) {
+                $imageId = $image['id'];
+        
+                if ($imageId == 0) {
+                    // New image: Store it and associate it with the tag
+                    $newImage = Image::create([
+                        'path' => $image['url'],
+                        'tagId' => $tag->id,
+                    ]);
+                    $updatedImageIds[] = $newImage->id;
+                } else {
+                    // Existing image: Update the path if needed
+                    $existingImage = Image::find($imageId);
+                    if ($existingImage) {
+                        $existingImage->path = $image['url'];
+                        $existingImage->save();
+                        $updatedImageIds[] = $imageId;
+                    }
+                }
+            }
+
+            Image::where('tagId', $tag->id)->whereNotIn('id', $updatedImageIds)->delete();
 
             return response()->json([
                 "status" => true,
