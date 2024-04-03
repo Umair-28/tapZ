@@ -95,20 +95,19 @@ class AuthController extends Controller
         $account = Account::find($id);
         if($account){
             $tags = Tag::where('userId',$account->id)->get();
-            $tagImages = Image::where("tagId", $account->id)->get();
 
+            foreach($tags as $tag){
+            $tagImages = Image::where("tagId", $tag->id)->get();
             foreach($tagImages as $image){
                 Storage::delete('public/uploads/'. basename($image->path));
                 $image->delete();
             }
-
-            foreach($tags as $tag){
                 $tag->delete();
             }
 
             $account->delete();
 
-            return response()->json(['status' => true, 'message' => 'Account and associated images deleted successfully']);
+            return response()->json(['status' => true, 'message' => 'Account, associated images and tags are deleted successfully'],200);
         }
 
         return response()->json(["status"=>false, "message"=> "user not found"],404);
