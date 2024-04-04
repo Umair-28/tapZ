@@ -59,7 +59,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), $validationRules);
 
         if ($validator->fails()) {
-            return response()->json(["status" => false, "message" => $validator->errors()->first()], 400);
+            return response()->json(["status" => false, "message" => $validator->errors()->first()], 422);
         }
 
         $user = Account::where('email', $request->email)->first();
@@ -89,7 +89,7 @@ class AuthController extends Controller
 
         $user = Auth::user();
         if(!$user){
-            return response()->json(["status"=>false, "message"=>"Not Authorized"]);
+            return response()->json(["status"=>false, "message"=>"Not Authorized"],401);
         }
 
         $account = Account::find($id);

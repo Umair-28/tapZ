@@ -50,7 +50,9 @@ class OtpMail extends Mailable
         return $this->view('email')
                     ->with([
                         'name' => $this->name,
-                        'otp' => $this->otp
+                        'otp' => $this->otp,
+                        'companyName' => 'TapZ',
+                        'url' => asset("storage/image.png")
                     ])
                     ->subject('OTP Mail');
     }
