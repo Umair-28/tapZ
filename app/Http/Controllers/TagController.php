@@ -20,90 +20,94 @@ class TagController extends Controller
         $user = Auth::user();
         // dd($user);
         $userId = $user->id;
+    
 
-        $validator = Validator::make($request->all(), [
-            'category' => 'required|in:pet,kid,luggage',
-            'name' => $request->category === 'luggage' ? "nullable" : "required|string",
-            'ownerName' => $request->category === "kid" ? "nullable" : "required",
-            'gender' => $request->category === 'luggage' ? "nullable" : "required|in:male,female",
-            'age' => $request->category === 'luggage' ? "nullable" : "required",
-            'medicalIssue' => $request->category === 'luggage' ? "nullable" : "required",
-            'height' => $request->category === 'kid' ? "required" : "nullable",
-            'weight' => $request->category === 'pet' ? "required" : "nullable",
-            'color' => $request->category === 'pet' ? "required" : "nullable",
-            'dressColor' => $request->category === 'kid' ? "required" : "nullable",
-            'vetDetail' => $request->category === 'pet' ? "required" : "nullable",
-            // 'doctorDetail' => $request->category === 'kid' ? 'required' :"nullable",
-            'brand' => $request->category === 'luggage' ? "required" : "nullable",
-            'luggageType' => $request->category === 'luggage' ? "required" : "nullable",
-            'reward' => "required|string",
-            'mobileNumber' => "required|string",
-            'mobileNumber2' => "string|nullable",
-            'contactEmail' => "required|email",
-            'address' => "required|string",
-            'note' => "string|nullable",
-            // 'images' => 'nullable|array'
+        return $request;
+        // $validator = Validator::make($request->all(), [
+        //     'category' => 'required|in:pet,kid,luggage',
+        //     'name' => $request->category === 'luggage' ? "nullable" : "required|string",
+        //     'ownerName' => $request->category === "kid" ? "nullable" : "required",
+        //     'gender' => $request->category === 'luggage' ? "nullable" : "required|in:male,female",
+        //     'age' => $request->category === 'luggage' ? "nullable" : "required",
+        //     'medicalIssue' => $request->category === 'luggage' ? "nullable" : "required",
+        //     'height' => $request->category === 'kid' ? "required" : "nullable",
+        //     'weight' => $request->category === 'pet' ? "required" : "nullable",
+        //     'color' => $request->category === 'pet' ? "required" : "nullable",
+        //     'dressColor' => $request->category === 'kid' ? "required" : "nullable",
+        //     'vetDetail' => $request->category === 'pet' ? "required" : "nullable",
+        //     'doctorDetail' => $request->category === 'kid' ? 'required' :"nullable",
+        //     'brand' => $request->category === 'luggage' ? "required" : "nullable",
+        //     'luggageType' => $request->category === 'luggage' ? "required" : "nullable",
+        //     'reward' => "required|string",
+        //     'mobileNumber' => "required|string",
+        //     'mobileNumber2' => "string|nullable",
+        //     'contactEmail' => "required|email",
+        //     'address' => "required|string",
+        //     'note' => "string|nullable",
+        //     'images' => 'nullable|array'
 
-        ]);
+        // ]);
 
         if ($validator->fails()) {
 
-            return response()->json(['status' => false, 'message' => $validator->error()->first()], 422);
+            // return $validator;
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
         }
+    
 
-        $tag = new Tag();
+        // $tag = new Tag();
 
-        $data = $request->all();
-        $columns = Schema::getColumnListing('tags_category');
+        // $data = $request->all();
+        // $columns = Schema::getColumnListing('tags_category');
 
-        foreach ($data as $key => $value) {
+        // foreach ($data as $key => $value) {
 
-            if (in_array($key, $columns)) {
+        //     if (in_array($key, $columns)) {
 
-                $tag->$key = $value;
-            }
-        }
-        $tag->userId = $userId;
-        // dd($tag);
-        $tag->save();
+        //         $tag->$key = $value;
+        //     }
+        // }
+        // $tag->userId = $userId;
+        // // dd($tag);
+        // $tag->save();
 
         // Saving the Uploaded Images and their path in Database //
 
         // if ($request->hasFile('images') && is_array($request->file('images')) && count($request->file('images')) > 0) {
-        if ($request->images) {
+        // if ($request->images) {
 
-            // foreach ($request->images as $image) {
-            //     // Validate each image
-            //     $validator = Validator::make(
-            //         ['image' => $image],
-            //         ['image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'] // Adjust the validation rules as needed
-            //     );
+        //     // foreach ($request->images as $image) {
+        //     //     // Validate each image
+        //     //     $validator = Validator::make(
+        //     //         ['image' => $image],
+        //     //         ['image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'] // Adjust the validation rules as needed
+        //     //     );
 
-            //     if ($validator->fails()) {
-            //         // Handle validation errors
-            //         return response()->json(['status' => false, 'message' => "image validation fails"], 422);
-            //     }
-            // }
+        //     //     if ($validator->fails()) {
+        //     //         // Handle validation errors
+        //     //         return response()->json(['status' => false, 'message' => "image validation fails"], 422);
+        //     //     }
+        //     // }
 
-            // All images are valid, proceed to store them
-            foreach ($request->images as $image) {
+        //     // All images are valid, proceed to store them
+        //     foreach ($request->images as $image) {
 
-                $fileName = Str::random(8) . '_' . time() . '.' . $image->getClientOriginalExtension();
-                $path = $image->storeAs('uploads', $fileName, 'public');
+        //         $fileName = Str::random(8) . '_' . time() . '.' . $image->getClientOriginalExtension();
+        //         $path = $image->storeAs('uploads', $fileName, 'public');
 
-                // Create a database record for each stored image
-                Image::create([
-                    'path' => $path,
-                    'tagId' => $tag->id,
-                ]);
-            }
-        } else {
-            // Handle if no images were uploaded
-            return response()->json(['status' => false, 'message' => 'No images uploaded'], 422);
-        }
+        //         // Create a database record for each stored image
+        //         Image::create([
+        //             'path' => $path,
+        //             'tagId' => $tag->id,
+        //         ]);
+        //     }
+        // } else {
+        //     // Handle if no images were uploaded
+        //     return response()->json(['status' => false, 'message' => 'No images uploaded'], 422);
+        // }
 
 
-        return response()->json(["status" => true, "message" => "Data inserted Successfully"]);
+        // return response()->json(["status" => true, "message" => "Data inserted Successfully"]);
     }
 
 
