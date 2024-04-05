@@ -98,14 +98,22 @@ class TagController extends Controller
 
     public function getTagsByCategory($cat)
     {
+        // return $cat;
         if ($cat != "pet" && $cat != "kid" && $cat != "luggage") {
             return response()->json(["status" => false, "message" => "Category does not Exist"], 404);
         }
 
+        $user = Auth::user();
+        $userId = $user->id;
+
         $formattedData = [];
 
         // Get tags by category
-        $tags = Tag::where('category', $cat)->get();
+        $tags = Tag::where('category', $cat)->where('userId',$userId)->get();
+
+        if ($tags->isEmpty()) {
+            return response()->json(["status" => false, "message" => "No Tags", "data"=> $tags],404);
+        }
 
         // Loop through each tag
         foreach ($tags as $tag) {
@@ -187,8 +195,10 @@ class TagController extends Controller
     }
 
 
-    public function getAllTags(){
-    $data = Tag::all();
+    public function getAllTags(Request $request){
+    $user = Auth::user();
+    $userId = $user->id;   
+    $data = Tag::where('userId',$userId)->get();
 
     $kidArray = [];
     $petArray = [];
@@ -237,7 +247,7 @@ class TagController extends Controller
             $kidArray[] = $recordData;
         } elseif ($record->category === 'pet') {
             $petArray[] = $recordData;
-        } else {
+        } elseif ($record->category === 'luggage') {
             $luggageArray[] = $recordData;
         }
     }
@@ -309,25 +319,7 @@ class TagController extends Controller
             $imageData = $request->input('images', []);
             $updatedImageIds = [];
 
-            // [
-
-                    //     {
-                    //         "id": 12
-                    //         "image": "qwertywerty"
-                    //     },
-                    //     {
-                    //         "id": 21
-                    //         "image": "awqeqrqwr"
-                    //     },
-                    //     {
-                    //         "id": 0
-                    //         "image": "file"
-                    //     }
-                    //     {
-                    //         "id": 22
-                    //         "image": "asdawafawf"
-                    //     }
-               // ]
+ 
             $imagesToDelete = $existingImages->keys()->diff($updatedImageIds);
             Image::whereIn('id', $imagesToDelete)->delete();
 

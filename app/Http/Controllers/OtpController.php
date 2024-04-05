@@ -37,7 +37,7 @@ class OtpController extends Controller
 
          Mail::to($userEmail)->send(new OtpMail($userName, $otp));
 
-         return response()->json(["status"=>true, "message"=> "OTP successfully saved and Email is sent"]);
+         return response()->json(["status"=>true, "message"=> "OTP successfully saved and Email is sent"],200);
       
     }
 
