@@ -23,10 +23,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+
+
 Route::post('/account/create', [AuthController::class, 'signUp']);
 Route::post('/account/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->delete('/account/delete/{id}', [AuthController::class, 'deleteAccount']);
+Route::middleware('auth:sanctum')->delete('/account/delete', [AuthController::class, 'deleteAccount']);
 
 
 

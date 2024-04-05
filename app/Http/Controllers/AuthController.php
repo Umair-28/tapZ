@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Tag;
 use App\Models\Account;
+use Illuminate\Support\Facades\File;
 use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -85,21 +86,27 @@ class AuthController extends Controller
         }
     }
 
-    public function deleteAccount($id){
+    public function deleteAccount(){
 
         $user = Auth::user();
+        $authId = Auth::Id();
         if(!$user){
             return response()->json(["status"=>false, "message"=>"Not Authorized"],401);
         }
 
-        $account = Account::find($id);
+        $account = Account::find($authId);
         if($account){
             $tags = Tag::where('userId',$account->id)->get();
 
             foreach($tags as $tag){
             $tagImages = Image::where("tagId", $tag->id)->get();
-            foreach($tagImages as $image){
-                Storage::delete('public/uploads/'. basename($image->path));
+            foreach ($tagImages as $image) {
+                $imagePath = public_path('images/' . basename($image->path));
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+                
+                // Delete the image record from the database
                 $image->delete();
             }
                 $tag->delete();

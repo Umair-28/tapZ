@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Tag;
 use App\Models\Image;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\Account;
 use Illuminate\Support\Facades\Validator;
@@ -74,38 +75,21 @@ class TagController extends Controller
 
         // Saving the Uploaded Images and their path in Database //
 
-        // if ($request->hasFile('images') && is_array($request->file('images')) && count($request->file('images')) > 0) {
-        if ($request->images) {
+        if ($request->hasFile('images') && is_array($request->file('images')) && count($request->file('images')) > 0) {
+        foreach ($request->file('images') as $image) {
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images'), $imageName);
 
-            // foreach ($request->images as $image) {
-            //     // Validate each image
-            //     $validator = Validator::make(
-            //         ['image' => $image],
-            //         ['image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'] // Adjust the validation rules as needed
-            //     );
-
-            //     if ($validator->fails()) {
-            //         // Handle validation errors
-            //         return response()->json(['status' => false, 'message' => "image validation fails"], 422);
-            //     }
-            // }
-
-            // All images are valid, proceed to store them
-            foreach ($request->images as $image) {
-
-                $fileName = Str::random(8) . '_' . time() . '.' . $image->getClientOriginalExtension();
-                $path = $image->storeAs('uploads', $fileName, 'public');
-
-                // Create a database record for each stored image
-                Image::create([
-                    'path' => $path,
-                    'tagId' => $tag->id,
-                ]);
-            }
-        } else {
-            // Handle if no images were uploaded
-            return response()->json(['status' => false, 'message' => 'No images uploaded'], 422);
+            // Optionally, you can create a database record for each stored image
+            // For example, if you have an 'images' table with columns 'path' and 'tag_id'
+            Image::create([
+                'path' => 'images/' . $imageName,
+                'tagId' => $tag->id,
+            ]);
         }
+    } else {
+        return response()->json(['status' => false, 'message' => 'No images uploaded'], 422);
+    }
 
 
         return response()->json(["status" => true, "message" => "Data inserted Successfully"]);
@@ -136,8 +120,7 @@ class TagController extends Controller
 
             // If image exists, add its ID and URL to the images array
             if ($image) {
-                $storagePath = $image->path;
-                $url = url('storage/' . $storagePath);
+                $url = url($image->path); 
                 $imagesArray[] = [
                     'id' => $image->id,
                     'imageUrl' => $url
@@ -172,8 +155,7 @@ class TagController extends Controller
 
             foreach ($images as $img) {
                 if ($img->path != "") {
-                    $storagePath = $img->path;
-                    $url = url('storage/' . $storagePath);
+                    $url = url($img->path);  
                     $imagesArray[] = [
                         'id' => $img->id,
                         'imageUrl' => $url
@@ -246,7 +228,7 @@ class TagController extends Controller
         if ($image) {
             $recordData['images'][] = [
                 'id' => $image->id,
-                'imageUrl' => url('storage/' . $image->path)
+                'imageUrl' => url( $image->path)
             ];
         }
 
@@ -390,8 +372,13 @@ class TagController extends Controller
         ->first();
         if ($tag) {
             $tagImages = Image::where("tagId", $tag->id)->get();
-            foreach($tagImages as $image){
-                Storage::delete('public/uploads/'. basename($image->path));
+            foreach ($tagImages as $image) {
+                $imagePath = public_path('images/' . basename($image->path));
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+                
+                // Delete the image record from the database
                 $image->delete();
             }
             $tag->delete();
