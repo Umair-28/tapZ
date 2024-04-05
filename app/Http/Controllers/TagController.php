@@ -114,7 +114,7 @@ class TagController extends Controller
 
     public function getTagsByCategory($cat)
     {
-        if ($cat != "pet" && $cat != "kisd" && $cat != "luggage") {
+        if ($cat != "pet" && $cat != "kid" && $cat != "luggage") {
             return response()->json(["status" => false, "message" => "Category does not Exist"], 404);
         }
 
@@ -182,13 +182,14 @@ class TagController extends Controller
             }
 
             $record = $this->formatChecker($data);
+            $record['images']= $imagesArray;
 
             return response()->json(
                 [
                     "status" => true,
                     'message' => "Record Found",
                     "data" => $record,
-                    "images" => $imagesArray
+                    //"images" => $imagesArray
                 ],
                 200
             );

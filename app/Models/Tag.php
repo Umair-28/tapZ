@@ -9,6 +9,6 @@ class Tag extends Model
 {
     use HasFactory;
 
-    protected $table = 'tags_Category';
+    protected $table = 'tags_category';
     protected $guarded = [];
 }
