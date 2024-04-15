@@ -34,11 +34,12 @@ Route::middleware('auth:sanctum')->delete('/account/delete', [AuthController::cl
 
 Route::prefix('tag')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/add', [TagController::class, 'addTag']);
-    Route::put('/update/{id}', [TagController::class, 'updateTag']);
+    Route::post('/update/{id}', [TagController::class, 'updateTag']);
     Route::delete('/delete/{id}', [TagController::class, 'deleteTag']);
     Route::get('/getById/{id}', [TagController::class, 'getTagById']);
     Route::get('/getByCategory/{category}', [TagController::class, 'getTagsByCategory']);
     Route::get('/getAllTags', [TagController::class, 'getAllTags']);
+    Route::delete('/image/{id}', [TagController::class, 'deleteImage']);
   
 });
 

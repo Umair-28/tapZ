@@ -21,6 +21,9 @@ class AuthController extends Controller
             "fullName" => "required|string",
             "email" => "required|email|unique:accounts",
             "password" => "required|min:6|max:12",
+            "platform" => "required|string",
+            "loginWith" => "required| in:facebook,google,email",
+            "fcmToken" => "required|string"
         ];
 
         $validator = Validator::make($request->all(), $validationRules);
@@ -35,13 +38,21 @@ class AuthController extends Controller
                 'fullName' => $request->input('fullName'),
                 'email' => $request->input('email'),
                 'password' => Hash::make($request->input('password')),
-                'loginWith' => 'email',
+                'loginWith' => $request->input('loginWith'),
+                "platform" => $request->input('platform'),
+                "fcmToken" => $request->input('fcmToken')
 
             ]);
+            $userData = $newAccount->makeHidden(['password', 'updated_at', 'otp'])->toArray();
 
             $token = $newAccount->createToken('auth-token')->plainTextToken;
+            $userData['googleId'] = $newAccount->googleId ?? '';
+            $userData['facebookId'] = $newAccount->facebookId ?? '';
+            $userData['appleId'] = $newAccount->appleId ?? '';
 
-            return response()->json(["status" => true, "message" => "account created successfully", "data" => ["token" => $token]], 201);
+            $userData['token']=$token;
+
+            return response()->json(["status" => true, "message" => "account created successfully", "data" => $userData], 201);
 
         } catch (\Exception $e) {
 
@@ -54,7 +65,10 @@ class AuthController extends Controller
     {
         $validationRules = [
             "email" => "required|email",
-            "password" => "required|string"
+            "password" => "required|string",
+            "platform" => "required|string",
+            "loginWith" => "required|in:facebook,google,email",
+            "fcmToken" => "required|string"
         ];
 
         $validator = Validator::make($request->all(), $validationRules);
@@ -69,10 +83,19 @@ class AuthController extends Controller
             if (Hash::check($request->password, $user->password)) {
 
                 $token = $user->createToken('auth-token')->plainTextToken;
+                $userData = $user->makeHidden(['password', 'updated_at', 'otp'])->toArray();
+                
+                $user->update([
+                    'platform'=>$request->input('platform'),
+                    'fcmToken' => $request->input('fcmToken'),
+                    'loginWith' => $request->input('loginWith')
+                ]);
+
+                $userData['token'] = $token;
                 return response()->json([
                     "status" => true,
                     "message" => "Logged in Successfully",
-                    "data" => ["token" => $token]
+                    "data" => $userData
                 ], 200);
 
             } else {

@@ -1,0 +1,123 @@
+body{
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.info-tags{
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+    justify-content: space-between;
+    width: 424px;
+}
+
+.logo{
+    position: absolute;
+    left: 50%;
+    top:60px;
+    transform: translate(-50%,-50%);
+  
+   
+    z-index: 1;
+}
+
+h1{
+    font-size:24px;
+    font-weight:700;
+}
+
+.tag {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 14px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    margin-right: 8px;
+    padding: 2px 15px;
+    width: 230px;
+    height: 80px; 
+    /* box-sizing: border-box;  */
+}
+
+
+
+
+.reward-tag {
+    display: flex;
+     justify-content: space-between; 
+     align-items: center;
+
+    margin: 0 auto;
+    margin-left:20px;
+    margin-top: 10px;
+    padding: 10px 10px;
+    max-width: 380px;
+    border-radius: 10px;
+    box-shadow: 0 0px 3.1px rgba(0,0,0,0.25);
+} 
+
+.additional-info{
+   
+    margin:0 auto;
+    margin-top: 16px;
+    margin-left: 20px;
+    padding: 10px 20px;
+    max-width: 380px;
+    border-radius: 20px;
+    box-shadow:  0 0 8.2px rgba(0,0,0,0.25);
+}
+
+
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px; /* Adjust as needed */
+    margin: auto;
+}
+
+.slider {
+    display: flex;
+}
+
+.slide {
+    flex: 0 0 100%;
+    transition: transform 0.5s ease;
+}
+
+.slider-controls {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slider-indicators {
+    position: absolute;
+    left: 20px;
+}
+
+.slider-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+    border: 2px solid #fff; /* Adjust as needed */
+    background-color: transparent; /* Adjust as needed */
+    cursor: pointer;
+}
+
+.prev-slide,
+.next-slide {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+
+
+
