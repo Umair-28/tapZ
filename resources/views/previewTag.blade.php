@@ -13,7 +13,7 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-    {{-- <script src="{{ asset('js/script.js') }}"></script> --}}
+    <!-- <script src="{{ asset('js/script.js') }}" defer></script> -->
     <title>Document</title>
     <style>
         .controls-container {
@@ -24,64 +24,59 @@
         }
     </style>
 </head>
+
+<?php
+
+        $data=[
+            'luggageContact' => '/images/luggageContact.png',
+            'luggageBrand' => '/images/luggageBrand.png',
+            'luggageType' => '/images/luggageType.png',
+            'luggageFontColor' => 'rgba(73, 255, 211, 1)',
+            'luggageRewardImage' => '/images/luggageRewardImage.png',
+
+            'kidContact' => '/images/kidContact.png',
+            'kidHeight' => '/images/kidheight.png',
+            'kidDress' => '/images/dressColor.png',
+            'kidFontColor' => 'rgba(255, 196, 0, 1)',
+            'kidRewardImage' => '/images/kidReward.png',
+
+            'petContact' => '/images/petContact.png',
+            'petFontColor' => 'rgba(252, 26, 64, 1)',
+            'petRewardImage' => '/images/petRewardImage.png',
+        ];
+
+?>
+
+
 <body>
     <div class="logo">
-        <img src="/images/tapz.png" alt="">
+        <img src="/images/Tapz.png" alt="">
     </div>
 
     <div class="slider-container">
+        
         <div class="slider">
-            <div class="slide"><img src="/images/image.png" alt="Slide 1"></div>
-            <div class="slide"><img src="/images/image.png" alt="Slide 2"></div>
-            <div class="slide"><img src="/images/image.png" alt="Slide 3"></div>
-            <!-- Add more slides as needed -->
-        </div>
-        <div class="slider-controls">
-            <div class="slider-indicators"></div>
-            <button class="prev-slide">PREVIOUS</button>
-            <button class="next-slide">NEXT</button>
-        </div>
-    </div>
+        @foreach($images as $image)
+
+
     
-
-    {{-- <div id="demo" class="carousel slide">
-
-        <!-- The slideshow/carousel -->
-        <div class="carousel-inner p-3">
-   
-            
-            <div class="carousel-item active">
-                <img src="/images/image.png" alt="Los Angeles" class="d-block" style="width:100%">
-            </div>
-            <div class="carousel-item active">
-                <img src="/images/image.png" alt="Los Angeles" class="d-block" style="width:100%">
-            </div>
-            <div class="carousel-item active">
-                <img src="/images/image.png" alt="Los Angeles" class="d-block" style="width:100%">
-            </div>
-            
- 
+    <div class="slide"><img src="/{{ $image->path }}" alt="Image"></div>
+  @endforeach
+          <!-- <div class="slide"><img src="/images/image.png" alt="Slide 1"></div>
+          <div class="slide"><img src="/images/image.png" alt="Slide 1"></div>
+          <div class="slide"><img src="/images/image.png" alt="Slide 1"></div> -->
         </div>
         
-     
-        <div class="controls-container">
-            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
-        </div>
+      
+  <div class="controls">
+    <div class="control-btn" onclick="prevSlide()">&#10094;</div>
+    <div class="control-btn" onclick="nextSlide()">&#10095;</div>
+  </div>
+  <div class="slider-indicator"></div>
+</div>
 
-        <div class="carousel-indicators" style="bottom: 0; left: 0; margin-bottom: 10px; margin-left: 10px;">
-            <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
-        </div>
-    
-    </div> --}}
 
-    <div style="padding:6px;margin-left:18px">
+    <div style="padding:6px;margin-left:8px;margin-top:10px;">
         <div>
             <h1 style="display: inline-block;">
             @if($tag->category === 'kid' || $tag->category === 'pet')
@@ -103,7 +98,14 @@
             <p style="display: inline-block;margin-left:6px;font-size:13px;font-weight:400;color:gray;">{{ $tag->address }}</p>
         </div>
         <div>
-            <img src="/images/contact.png" alt="">
+                @if($tag->category === 'luggage')
+                 <img src="{{asset($data['luggageContact'])}}" alt="">
+                 @elseif($tag->category === 'kid')
+                 <img src="{{asset($data['kidContact'])}}" alt="">
+                 @else
+                 <img src="{{asset($data['petContact'])}}" alt=""> 
+                @endif 
+            
             <p style="display: inline-block;margin-left:6px;font-size:13px;font-weight:400;color:gray;">
             @if($tag->category === 'pet' || $tag->category === 'luggage')
             {{$tag->ownerName}}
@@ -120,7 +122,7 @@
             @if($tag->category === 'pet' || $tag->category === 'kid')
             <img src="/images/heart.png" alt="">
             @else
-            <img src="/images/heart.png" alt="">
+            <img src="{{asset($data['luggageBrand'])}}" alt="">
             @endif
 
             <p style="margin:0;font-size:14px;font-weight:700;">
@@ -130,7 +132,7 @@
             Brand
             @endif 
             </p>
-            <p style="margin:0;font-size:16px;font-weight:600;color:gray;">
+            <p style="margin:0;font-size:16px;font-weight:600;color:gray;white-space: nowrap;">
                 @if($tag->category === 'kid' || $tag->category === 'pet')
                 {{ $tag->gender }}
             @else
@@ -143,7 +145,7 @@
             @if($tag->category === 'kid' || $tag->category === 'pet')
             <img src="/images/age.png" alt="">
             @else
-            <img src="/images/age.png" alt="">
+            <img src="{{asset($data['luggageType'])}}" alt="">
             @endif
             <p style="margin:0;font-size:14px;font-weight:700;">
                 @if($tag->category === 'kid' || $tag->category === 'pet') 
@@ -154,7 +156,7 @@
             </p>
             <p style="margin:0;font-size:16px;font-weight:600;color:gray; white-space: nowrap;">
                 @if($tag->category === 'kid' || $tag->category === 'pet') 
-                {{ $tag->age }}
+                {{ $tag->age }} Years
                 @elseif($tag->category === 'luggage')
                 {{ $tag->luggageType }}
                 @endif
@@ -214,14 +216,34 @@
 
     <div class="reward-tag" style="">
         <div style="display: flex; align-items: center;">
-            <img src="/images/reward.png" alt="" style="margin-right: 10px; height: 60px; width: 60px;"> 
+            @if($tag->category === 'luggage')
+             <img src="{{asset($data['luggageRewardImage'])}}" alt="" style="margin-right: 5px; height: 60px; width: 60px;"> 
+            @elseif($tag->category === 'kid')
+             <img src="{{asset($data['kidRewardImage'])}}" alt="" style="margin-right: 5px; height: 60px; width: 60px;"> 
+            @else
+             <img src="{{asset($data['petRewardImage'])}}" alt="" style="margin-right: 5px; height: 60px; width: 60px;">
+            @endif 
             <div style="margin-top: 15px;">
-                <p  style="margin:0;font-size:18px;font-weight:700;color:red;">Reward</p>
-                <p style="font-size: 14px; line-height: 1;white-space:nowrap;">A reward of <span style="color:red;font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the kid</p>
+                @if($tag->category === 'luggage')
+                <p  style="margin:0;font-size:18px;font-weight:700;color:{{$data['luggageFontColor']}};">Reward</p>
+                <p style="font-size: 14px; line-height: 1;word-wrap:break-word;">A reward of <span style="color:{{$data['luggageFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the kid</p>
+                @elseif($tag->category === 'kid')
+                <p  style="margin:0;font-size:18px;font-weight:700;color:{{$data['kidFontColor']}};">Reward</p>
+                <p style="font-size: 14px; line-height: 1;word-wrap:break-word;">A reward of <span style="color:{{$data['kidFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the kid</p>
+                @else
+                <p  style="margin:0;font-size:18px;font-weight:700;color:{{$data['petFontColor']}};">Reward</p>
+                <p style="font-size: 14px; line-height: 1;word-wrap:break-word;">A reward of <span style="color:{{$data['petFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the kid</p>
+                @endif
             </div>
         </div>
         <div>
+            @if($tag->category === 'luggage')
+            <p style="margin:0;margin-left:10px;font-size:30px;font-weight:700;color:{{$data['luggageFontColor']}};">${{ $tag->reward }}</p>
+            @elseif($tag->category === 'kid')
+            <p style="margin:0;margin-left:10px;font-size:30px;font-weight:700;color:{{$data['kidFontColor']}};">${{ $tag->reward }}</p>
+            @else
             <p style="margin:0;margin-left:10px;font-size:30px;font-weight:700;color:red;">${{ $tag->reward }}</p>
+            @endif
         </div>
     </div>
 
@@ -244,30 +266,99 @@
                 <p  style=" margin:0;font-size:14px;font-weight:500;color:gray">Jhon St, 28 Fc 2000, USA, Pakistan, Florida</p>
             </div>
         </div>
+
+        @if($tag->category === 'pet')
         <div style="margin-top:5px ">
-            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:18px;font-weight:600;">Children's Detail</p>
+            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:18px;font-weight:600;">Vet Details</p>
+            <p style="font-size:15px; text-align:justify;color:gray;">{{$tag->vetDetail}}</p>
+        </div>
+        @elseif($tag->category === 'kid')
+        <div style="margin-top:5px ">
+            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:18px;font-weight:600;">Doctor Detail</p>
             <p style="font-size:15px; text-align:justify;color:gray;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
                 Explicabo dolore, laboriosam debitis in temporibus corporis, 
                 ipsum similique molestiae beatae soluta fugiat repellat quibusdam 
                 odio velit deserunt fugit vitae aliquid adipisci.</p>
         </div>
+
+        @endif
+
+        @if($tag->category === 'pet' || $tag->category === 'kid')
+
         <div style="margin-top:5px ">
             <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:18px;font-weight:600;">Medical Issue</p>
-            <p style="font-size:15px; text-align:justify;color:gray;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
-                Explicabo dolore, laboriosam debitis in temporibus corporis, 
-                ipsum similique molestiae beatae soluta fugiat repellat quibusdam 
-                odio velit deserunt fugit vitae aliquid adipisci.</p>
+            <p style="font-size:15px; text-align:justify;color:gray;">{{$tag->medicalIssue}}</p>
         </div>
+
+        @endif
+
         <div style="margin-top:5px ">
             <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:18px;font-weight:600;">Note</p>
             <p style="font-size:15px; text-align:justify;color:gray;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
                 Explicabo dolore, laboriosam debitis in temporibus corporis.</p>
         </div>
     </div>
+    <script>
+  let slideIndex = 0;
+  let slideInterval;
 
-
-   
+  function showSlides() {
+    const slider = document.querySelector('.slider');
+    const slideWidth = slider.clientWidth;
+    const numSlides = slider.children.length;
     
+    // Ensure slideIndex stays within valid range
+    slideIndex = (slideIndex + numSlides) % numSlides;
+    
+    slider.style.transform = `translateX(-${slideIndex * slideWidth}px)`;
+
+    // Update slider indicator
+    const indicatorDots = document.querySelectorAll('.indicator-dot');
+    indicatorDots.forEach(dot => dot.classList.remove('active'));
+    indicatorDots[slideIndex].classList.add('active');
+  }
+
+  function nextSlide() {
+    slideIndex++;
+    showSlides();
+  }
+
+  function prevSlide() {
+    slideIndex--;
+    showSlides();
+  }
+
+  // Create slider indicator dots
+  const slider = document.querySelector('.slider');
+  const numSlides = slider.children.length;
+  const indicatorContainer = document.querySelector('.slider-indicator');
+  for (let i = 0; i < numSlides; i++) {
+    const dot = document.createElement('div');
+    dot.classList.add('indicator-dot');
+    if (i === 0) {
+      dot.classList.add('active');
+    }
+    dot.addEventListener('click', () => {
+      slideIndex = i;
+      showSlides();
+    });
+    indicatorContainer.appendChild(dot);
+  }
+
+  
+//   function startAutoScroll() {
+//     slideInterval = setInterval(nextSlide, 3000);
+//   }
+
+  // Function to stop auto-scrolling
+  function stopAutoScroll() {
+    clearInterval(slideInterval);
+  }
+
+  // Start auto-scrolling when the page loads
+  startAutoScroll();
+</script>
+
     
 </body>
 

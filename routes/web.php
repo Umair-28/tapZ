@@ -16,4 +16,4 @@ use App\Http\Controllers\TagController;
 
 
 
-Route::get('/{id}', [TagController::class, 'previewTag']);
+Route::get('/tag/{id}', [TagController::class, 'previewTag']);

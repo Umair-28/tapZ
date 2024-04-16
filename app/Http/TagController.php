@@ -461,17 +461,10 @@ class TagController extends Controller
     {
         $tag = Tag::find($id);
         if ($tag) {
-            $images = Image::where('tagId', $tag->id)->get();
-    
-            // Check if images exist
-            if ($images->isEmpty()) {
-                // No images found, handle this case as needed
-                return view('noImagesFound', compact('tag'));
-            }
-            
-  
-    
-            return view('previewTag', compact('tag','images'));
+            $images = Image::where('tagId', $tag->id)->first();
+
+
+            return view('previewTag', compact('tag', 'images'));
         } else {
             return view('notFound');
         }

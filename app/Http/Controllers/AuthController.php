@@ -100,12 +100,12 @@ class AuthController extends Controller
 
             } else {
 
-                return response()->json(["status"=>false, "message"=>"Password is not Correct"],401);
+                return response()->json(["status"=>false, "message"=>"Password does not matched"],401);
             }
 
         } else {
 
-            return response()->json(["status"=>false, "message"=>"Email is not Correct"],401);
+            return response()->json(["status"=>false, "message"=>"Email not found"],401);
         }
     }
 

@@ -20,7 +20,7 @@ class OtpController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if($validator->fails()){
-            return response()->json(['status' => false, 'message' => $validator->error()->first()], 422);
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
         }
 
         $inputEmail = $request->input('email');
