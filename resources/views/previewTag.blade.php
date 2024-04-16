@@ -80,14 +80,14 @@
         <div>
             <h1 style="display: inline-block;">
             @if($tag->category === 'kid' || $tag->category === 'pet')
-            {{ $tag->name }}
+            {{ ucfirst($tag->name) }}
             @else
             Luggage
             @endif
             </h1>
             <p style="display: inline-block; margin-right: 10px;font-size:16px;font-weight:600;color:gray;">(
                 @if($tag->category === 'kid' || $tag->category === 'pet')
-                {{ $tag->gender }}
+                {{ ucfirst($tag->gender) }}
                 @else
                 {{$tag->luggageType}}
                 @endif
@@ -95,7 +95,7 @@
         </div>
         <div>
             <img src="/images/location.png" alt="">
-            <p style="display: inline-block;margin-left:6px;font-size:13px;font-weight:400;color:gray;">{{ $tag->address }}</p>
+            <p style="display: inline-block;margin-left:6px;font-size:13px;font-weight:400;color:gray;">{{ ucfirst($tag->address) }}</p>
         </div>
         <div>
                 @if($tag->category === 'luggage')
@@ -108,9 +108,9 @@
             
             <p style="display: inline-block;margin-left:6px;font-size:13px;font-weight:400;color:gray;">
             @if($tag->category === 'pet' || $tag->category === 'luggage')
-            {{$tag->ownerName}}
+            {{ucfirst($tag->ownerName)}}
             @else
-            {{$tag->fatherName}}
+            {{ucfirst($tag->fatherName)}}
             @endif
             </p>
         </div>
@@ -248,37 +248,52 @@
     </div>
 
     <div class="additional-info">
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+    <div class="grid">
+    <div>
+        <p class="heading" style="font-weight: 600;">Mobile Number</p>
+        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;">{{$tag->mobileNumber}}</p>
+    </div>
+    <div>
+        <p class="heading" style="font-weight: 600;">Secondary Number</p>
+        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;">{{$tag->mobileNumber2}}</p>
+    </div>
+    <div>
+        <p class="heading" style="font-weight: 600;">Contact Email</p>
+        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;">{{$tag->contactEmail}}</p>
+    </div>
+    <div>
+        <p class="heading" style="font-weight: 600;">Address</p>
+        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;">{{$tag->address}}</p>
+    </div>
+</div>
+        <!-- <div style="" class="grid">
             <div>
-                <p style=" margin:0;font-size:14px;font-weight:600;">Mobile Number</p>
-                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray;">+01 3847 *******</p>
+                <p style=" margin:0;font-size:16px;font-weight:600;">Mobile Number</p>
+                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray;">{{$tag->mobileNumber}}</p>
             </div>
             <div>
-                <p style=" margin:0;font-size:14px;font-weight:600;">Secondary Number</p>
-                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray">+01 1234 *******</p>
+                <p style=" margin:0;font-size:16px;font-weight:600;">Secondary Number</p>
+                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray">{{$tag->mobileNumber2}}</p>
             </div>
             <div>
-                <p style=" margin:0;font-size:14px;font-weight:600;">Contact Email</p>
+                <p style=" margin:0;font-size:16px;font-weight:600;">Contact Email</p>
                 <p  style=" margin:0;font-size:14px;font-weight:500;color:gray">{{ $tag->contactEmail }}</p>
             </div>
             <div>
-                <p style=" margin:0;font-size:14px;font-weight:600;">Address</p>
-                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray">Jhon St, 28 Fc 2000, USA, Pakistan, Florida</p>
+                <p style=" margin:0;font-size:16px;font-weight:600;">Address</p>
+                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray">{{$tag->address}}</p>
             </div>
-        </div>
+        </div> -->
 
         @if($tag->category === 'pet')
         <div style="margin-top:5px ">
-            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:18px;font-weight:600;">Vet Details</p>
+            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:16px;font-weight:600;">Vet Details</p>
             <p style="font-size:15px; text-align:justify;color:gray;">{{$tag->vetDetail}}</p>
         </div>
         @elseif($tag->category === 'kid')
         <div style="margin-top:5px ">
-            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:18px;font-weight:600;">Doctor Detail</p>
-            <p style="font-size:15px; text-align:justify;color:gray;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
-                Explicabo dolore, laboriosam debitis in temporibus corporis, 
-                ipsum similique molestiae beatae soluta fugiat repellat quibusdam 
-                odio velit deserunt fugit vitae aliquid adipisci.</p>
+            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:16px;font-weight:600;">Doctor Detail</p>
+            <p style="font-size:15px; text-align:justify;color:gray;">{{$tag->doctorDetail}}</p>
         </div>
 
         @endif
@@ -286,16 +301,15 @@
         @if($tag->category === 'pet' || $tag->category === 'kid')
 
         <div style="margin-top:5px ">
-            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:18px;font-weight:600;">Medical Issue</p>
+            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:16px;font-weight:600;">Medical Issue</p>
             <p style="font-size:15px; text-align:justify;color:gray;">{{$tag->medicalIssue}}</p>
         </div>
 
         @endif
 
         <div style="margin-top:5px ">
-            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:18px;font-weight:600;">Note</p>
-            <p style="font-size:15px; text-align:justify;color:gray;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
-                Explicabo dolore, laboriosam debitis in temporibus corporis.</p>
+            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:16px;font-weight:600;">Note</p>
+            <p style="font-size:15px; text-align:justify;color:gray;">{{$tag->note}}</p>
         </div>
     </div>
     <script>
@@ -346,9 +360,9 @@
   }
 
   
-//   function startAutoScroll() {
-//     slideInterval = setInterval(nextSlide, 3000);
-//   }
+  function startAutoScroll() {
+    slideInterval = setInterval(nextSlide, 3000);
+  }
 
   // Function to stop auto-scrolling
   function stopAutoScroll() {
