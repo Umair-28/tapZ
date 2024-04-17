@@ -87,11 +87,27 @@ class AuthController extends Controller
                 
                 $user->update([
                     'platform'=>$request->input('platform'),
-                    'fcmToken' => $request->input('fcmToken'),
+                    'fcmToken' => $request->input('fcmToken'),  
                     'loginWith' => $request->input('loginWith')
                 ]);
-
+                
+                $image = Image::where('userId',$user->id)->get();
+                
+                foreach ($image as $img) {
+                    if ($img->path != "") {
+                        $url = url($img->path);
+                        $user->userImage  = $url;
+                        $user->save();
+                      
+                    }
+                }
+               
+                
                 $userData['token'] = $token;
+               
+
+                
+                
                 return response()->json([
                     "status" => true,
                     "message" => "Logged in Successfully",

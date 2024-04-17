@@ -29,6 +29,8 @@ Route::post('/account/create', [AuthController::class, 'signUp']);
 Route::post('/account/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->delete('/account/delete', [AuthController::class, 'deleteAccount']);
+Route::middleware('auth:sanctum')->post('/account/update', [TagController::class, 'updateAccount']);
+
 
 
 
@@ -43,8 +45,12 @@ Route::prefix('tag')->middleware(['auth:sanctum'])->group(function () {
   
 });
 
+
+
 Route::post('/forgot-password', [OtpController::class, 'generateOTP']);
 Route::post('/reset-password', [OtpController::class, 'resetPassword']);
+
+Route::middleware('auth:sanctum')->get('/get-notifications', [TagController::class, 'getNotifications']);
 
 
 Route::get('/unauthenticated', function(){

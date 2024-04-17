@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
 
 
 class TagController extends Controller
@@ -470,7 +471,7 @@ class TagController extends Controller
             }
             
   
-    
+          
             return view('previewTag', compact('tag','images'));
         } else {
             return view('notFound');
@@ -481,7 +482,7 @@ class TagController extends Controller
     {
         $user = Auth::user();
         if (!$user) {
-            return response()->json(["status" => false, "message" => "Not Authorized"]);
+            return response()->json(["status" => false, "message" => "Not Authorized"],401);
         }
         
         $image = Image::where('id', $id)->first();
@@ -497,6 +498,171 @@ class TagController extends Controller
             return response()->json(['status' => true, 'message' => 'Image deleted successfully'], 200);
         }
         return response()->json(["status" => false, "message" => "Image not Found"], 404);
+    }
+
+    public function updateAccount(Request $request){
+
+       
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(["status" => false, "message" => "Not Authorized"],401);
+        }
+
+        $validationRules = [
+            
+            "fullName" => "string",
+
+        ];
+        $accessToken = $user->currentAccessToken();
+
+        $validator = Validator::make($request->all(), $validationRules);
+
+        if ($validator->fails()) {
+            return response()->json(["status" => false, "message" => $validator->errors()->first()], 422);
+        }
+
+        $user->update([
+            
+            'fullName'=>$request->fullName
+        ]);
+        $user->save();
+
+
+        
+       
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageExtension = $image->getClientOriginalExtension(); // Get the original extension of the file
+            $imageName = time() . '_' . uniqid() . '.' . $imageExtension; // Append the original extension to the generated filename
+    
+            $image->move(public_path('images'), $imageName);
+
+            Image::create([
+                'path' => 'images/' . $imageName,
+                'userId' => $user->id,
+            ]);
+        }
+
+        $images = Image::where('userId', $user->id)->get();
+
+        foreach ($images as $img) {
+            if ($img->path != "") {
+                $url = url($img->path);
+                $user->userImage  = $url;
+              
+            }
+        }
+        $token = $request->bearerToken();
+        $user->token = $token;
+      
+       
+
+        return response()->json(["status" => true, "message" => "Account updated successfully", "data"=>$user], 200);
+    }
+
+    public function tagLocation(Request $request){
+
+            $latitude = $request->lat;
+            $longitude = $request->lng;
+            $address = $request->address;
+            $userId = $request->userId;
+            $tagId = $request->tagId;
+            $fcmToken = Account::where('id',$request->userId)->value('fcmToken');
+                
+
+        // FCM API Url
+        $url = 'https://fcm.googleapis.com/fcm/send';
+
+        // Put your Server Key here
+        $apiKey = "AAAAaqsOano:APA91bEOzteQsyRTPwUJYVwg63oJNjlPvT6gxPttNojm7Ybohxv2W5u0uIKceg976U_M2ueTPyg9YvGIfL341DyvURDsRWLyCdtT13Q631wtwZjfJ3I9wrVZRAEJA_gm8AlAXE8rE2gg";
+
+        // Compile headers in one variable
+        $headers = array(
+            'Authorization:key=' . $apiKey,
+            'Content-Type:application/json'
+        );
+        $message = "Your Tag has been Found";
+        // Add notification content to a variable for easy reference
+        $notifData = [
+            'title' => "Profile Visited",
+            'body' => $message,
+            "sound" => "default",
+            //  "image": "url-to-image",//Optional
+            // 'click_action' => "activities.NotifHandlerActivity" //Action/Activity - Optional
+        ];
+
+        $dataPayload = [
+            'to' => 'My Name',
+            'points' => 80,
+            'address' => $address,
+            'tagId' => $tagId,
+
+        ];
+
+        // Create the api body
+        $apiBody = [
+            'notification' => $notifData,
+            'data' => $dataPayload, //Optional
+            'time_to_live' => 600, // optional - In Seconds
+            //'to' => '/topics/mytargettopic'
+            //'registration_ids' = ID ARRAY
+            'to' => $fcmToken,
+        ];
+        // Initialize curl with the prepared headers and body
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($apiBody));
+
+        // Execute call and save result
+        $result = curl_exec($ch);
+        // Close curl after call
+        curl_close($ch);
+        if ($result) {
+
+            $notification = Notification::create([
+                'address' => $address,
+                'userId' => $userId,
+                'tagId' => $tagId,
+                'latitude'=>$latitude,
+                'longitude'=>$longitude
+            ]);
+            return $result;
+        }else{
+            return response()->json(["status"=>false, "message"=>"Error Saving Message in Mysql"]);
+        }
+    
+
+    }//function bracket
+
+    public function getNotifications(){
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(["status" => false, "message" => "Not Authorized"],401);
+        }
+
+
+        
+        $data = Notification::where('userId',$user->id)->get();
+
+        if($data->isEmpty()){
+            return response()->json(["status"=>true, "message"=>"No notifications for this user", "data"=>$data]);
+        }
+
+        return response()->json(["status"=>true, "message"=>"Notifications found", "data"=>$data]);
+
+        
+
+
+
+        
+
     }
 
 

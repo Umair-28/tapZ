@@ -141,8 +141,8 @@
     margin:0 auto;
     margin-top: 16px;
     margin-left: 10px;
-    padding: 10px;
-    padding-left: 30px;
+   
+    padding: 10px 0px 10px 15px;
 
     width: 95%;
     border-radius: 20px;
@@ -162,7 +162,16 @@
     font-size: 16px;
     font-weight: 600;
     white-space: nowrap; /* Ensure heading stays on a single line */
-}
+  }
+
+  .contact-buttons{
+    display: flex;
+    justify-content: right;
+   
+  }
+  .contact-buttons button{
+    display: block;
+  }
   
   
   
@@ -176,17 +185,19 @@
 @media (max-width: 576px) {
 body{
     margin: 0;
-    padding: 10px;
+    padding: 0px;
     box-sizing: border-box;
-    overflow-x: hidden;
+  
     
 }
 
 .info-tags{
     display: flex;
     align-items: center;
-    padding: 5px 8px;
+    padding: 5px 0px;
+    
     justify-content: space-between;
+    
     width: 100%;
 }
 
@@ -212,8 +223,8 @@ h1{
     border-radius: 14px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     margin-right: 8px;
-    padding: 2% 4%;
-    width: 24%;
+    padding: 2% 3%;
+    width: 22%;
     box-sizing: border-box; 
 }
 
@@ -226,7 +237,7 @@ h1{
      align-items: center;
 
     margin: 0 auto;
-    margin-left:10px;
+    margin-left:5px;
     margin-top: 10px;
     padding: 10px 5px;
     width: 95%;
@@ -239,7 +250,8 @@ h1{
     margin:0 auto;
     margin-top: 16px;
     margin-left: 10px;
-    padding: 10px 20px;
+    margin-bottom: 20px;
+    padding: 10px 0px 10px 8px;
     width: 95%;
     border-radius: 20px;
     box-shadow:  0 0 3.2px rgba(0,0,0,0.25);
@@ -276,6 +288,7 @@ h1{
   width: 100%; 
   height: auto; 
   border-radius: 10px;
+  padding: 5px;
  
 }
 
@@ -320,7 +333,7 @@ h1{
 .grid{
   display: grid; 
   grid-template-columns: repeat(2, 1fr); 
-  column-gap: 50px;
+  column-gap: 8px;
   row-gap: 20px;
 }
 .heading {
