@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script> -->
 <input type="hidden" id="userId" value="{{$tag->userId}}" />
 <input type="hidden" id="tagId" value="{{$tag->id}}" />
+<input type="hidden" id="tagCategory" value="{{$tag->category}}" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <script src="{{ asset('js/script.js') }}" defer></script> 
@@ -92,10 +93,15 @@
                 @endif
             )</p> 
         </div>
-        <div style="">
-            <img src="/images/location.png" alt="" style="vertical-align: middle;">
-            <p style="display: inline-block;margin-left:6px;font-size:13px;font-weight:400;color:gray;">{{ ucfirst($tag->address) }}</p>
-        </div>
+  <div style="display: flex; align-items: flex-start;">
+    <div style="margin-right: 10px;">
+        <img src="/images/location.png" alt="">
+    </div>
+    <div style="flex-grow: 1;">
+       
+        <p style="margin:0;font-size:14px;font-weight:500;color:gray;margin-top:1px;word-wrap:break-word;">{{$tag->address}}</p>
+    </div>
+</div>
         <div>
                 @if($tag->category === 'luggage')
                  <img src="{{asset($data['luggageContact'])}}" alt="" style="vertical-align: middle;">
@@ -252,23 +258,20 @@
     <div class="additional-info">
     <div class="grid">
     <div>
-        <p class="heading" style="font-weight: 500;">Mobile Number</p>
-        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;margin-top:4px;">{{$tag->mobileNumber}}</p>
+        <p class="heading" style="font-weight: 500;padding-left:10px;">Mobile Number</p>
+        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;margin-top:4px;padding-left:10px;">{{$tag->mobileNumber}}</p>
     </div>
     @if(!empty($tag->mobileNumber2))
     <div>
-        <p class="heading" style="font-weight: 500;">Secondary Number</p>
-        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;;margin-top:4px;">{{$tag->mobileNumber2}}</p>
+        <p class="heading" style="font-weight: 500;padding-left:10px;">Secondary Number</p>
+        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;;margin-top:4px;padding-left:10px;">{{$tag->mobileNumber2}}</p>
     </div>
     @endif
     <div>
-        <p class="heading" style="font-weight: 500;">Contact Email</p>
-        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;margin-top:4px;">{{$tag->contactEmail}}</p>
+        <p class="heading" style="font-weight: 500;padding-left:10px;">Contact Email</p>
+        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;margin-top:4px;padding-left:10px;">{{$tag->contactEmail}}</p>
     </div>
-    <div>
-        <p class="heading" style="font-weight: 500;">Address</p>
-        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;margin-top:4px;">{{$tag->address}}</p>
-    </div>
+ 
 </div>
         <!-- <div style="" class="grid">
             <div>
@@ -289,15 +292,20 @@
             </div>
         </div> -->
 
+        <div>
+        <p class="heading" style="font-weight: 500;margin-top:24px;margin-bottom:3px;padding-left:10px;">Address</p>
+        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;margin-top:1px;padding-left:10px;word-wrap:wrap;">{{$tag->address}}</p>
+    </div>
+
         @if($tag->category === 'pet')
         <div style="margin-top:5px ">
-            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:16px;font-weight:500;">Vet Details</p>
-            <p style="font-size:15px; text-align:justify;color:gray;margin-top:3px;">{{$tag->vetDetail}}</p>
+            <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;">Vet Details</p>
+            <p style="font-size:15px; text-align:justify;color:gray;margin-top:1px;padding-left:10px;">{{$tag->vetDetail}}</p>
         </div>
         @elseif($tag->category === 'kid')
         <div style="margin-top:5px ">
-            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:16px;font-weight:500;">Doctor Detail</p>
-            <p style="font-size:15px; text-align:justify;color:gray;margin-top:3px;">{{$tag->doctorDetail}}</p>
+            <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;">Doctor Detail</p>
+            <p style="font-size:15px; text-align:justify;color:gray;margin-top:1px;padding-left:10px;">{{$tag->doctorDetail}}</p>
         </div>
 
         @endif
@@ -305,19 +313,19 @@
         @if($tag->category === 'pet' || $tag->category === 'kid')
 
         <div style="margin-top:5px ">
-            <p  style=" margin:0;margin-top:24px;margin-bottom:6px;font-size:16px;font-weight:500;">Medical Issue</p>
-            <p style="font-size:15px; text-align:justify;color:gray;margin-top:3px;">{{$tag->medicalIssue}}</p>
+            <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;;">Medical Issue</p>
+            <p style="font-size:15px; text-align:justify;color:gray;margin-top:1px;padding-left:10px;">{{$tag->medicalIssue}}</p>
         </div>
 
         @endif
 
         @if(!empty($tag->note))
     <div style="margin-top: 5px;">
-        <p style="margin: 0; margin-top: 24px; margin-bottom: 6px; font-size: 16px; font-weight: 500;">Note</p>
-        <p style="font-size: 15px; text-align: justify; color: gray; margin-top: 3px;">{{ $tag->note }}</p>
+        <p style="margin: 0; margin-top: 24px; margin-bottom: 3px; font-size: 16px; font-weight: 500;padding-left:10px;">Note</p>
+        <p style="font-size: 15px; text-align: justify; color: gray; margin-top: 2px;padding-left:10px;">{{ $tag->note }}</p>
     </div>
-@endif
-    </div>
+      @endif
+</div>
     <script>
   let slideIndex = 0;
   let slideInterval;

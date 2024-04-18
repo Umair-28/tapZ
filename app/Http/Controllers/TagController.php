@@ -500,6 +500,31 @@ class TagController extends Controller
         return response()->json(["status" => false, "message" => "Image not Found"], 404);
     }
 
+    public function deleteUserImage(Request $request){
+
+
+
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(["status" => false, "message" => "Not Authorized"],401);
+        }
+        
+        $image = Image::where('userId', $user->id)->first();
+        if ($image) {
+            // Delete the image record from the database
+            $image->delete();
+
+            // Delete the corresponding image file from the public directory
+            $imagePath = public_path($image->path); // Assuming 'path' is the column containing the image path
+            if (file_exists($imagePath)) {
+                unlink($imagePath); // Delete the file
+            }
+            return response()->json(['status' => true, 'message' => 'Image deleted successfully'], 200);
+        }
+        return response()->json(["status" => false, "message" => "Image not Found"], 404);
+
+    }
+
     public function updateAccount(Request $request){
 
        
@@ -547,11 +572,13 @@ class TagController extends Controller
 
         $images = Image::where('userId', $user->id)->get();
 
-        foreach ($images as $img) {
-            if ($img->path != "") {
-                $url = url($img->path);
-                $user->userImage  = $url;
-              
+        if($images){
+            foreach ($images as $img) {
+                if ($img->path != "") {
+                    $url = url($img->path);
+                    $user->userImage  = $url;
+                  
+                }
             }
         }
         $token = $request->bearerToken();
@@ -563,6 +590,8 @@ class TagController extends Controller
     }
 
     public function tagLocation(Request $request){
+
+            $tag_category =  $request->tag_category;
 
             $latitude = $request->lat;
             $longitude = $request->lng;
@@ -583,10 +612,11 @@ class TagController extends Controller
             'Authorization:key=' . $apiKey,
             'Content-Type:application/json'
         );
-        $message = "Your Tag has been Found";
+        $message = "Your tag has been Found";
+        
         // Add notification content to a variable for easy reference
         $notifData = [
-            'title' => "Profile Visited",
+            'title' => "Tag Found",
             'body' => $message,
             "sound" => "default",
             //  "image": "url-to-image",//Optional
@@ -598,8 +628,11 @@ class TagController extends Controller
             'points' => 80,
             'address' => $address,
             'tagId' => $tagId,
+            'tag_category' => $tag_category,
 
         ];
+
+      
 
         // Create the api body
         $apiBody = [
@@ -629,7 +662,8 @@ class TagController extends Controller
                 'userId' => $userId,
                 'tagId' => $tagId,
                 'latitude'=>$latitude,
-                'longitude'=>$longitude
+                'longitude'=>$longitude,
+                'tag_category' => $tag_category
             ]);
             return $result;
         }else{
