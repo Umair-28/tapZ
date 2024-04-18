@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
+use App\Models\Connection;
 
 
 class TagController extends Controller
@@ -463,6 +464,7 @@ class TagController extends Controller
         $tag = Tag::find($id);
         if ($tag) {
             $images = Image::where('tagId', $tag->id)->get();
+            $image = Image::where('tagId', $tag->id)->first();
     
             // Check if images exist
             if ($images->isEmpty()) {
@@ -472,7 +474,7 @@ class TagController extends Controller
             
   
           
-            return view('previewTag', compact('tag','images'));
+            return view('previewTag', compact('tag','images','image'));
         } else {
             return view('notFound');
         }
@@ -686,17 +688,34 @@ class TagController extends Controller
         $data = Notification::where('userId',$user->id)->get();
 
         if($data->isEmpty()){
-            return response()->json(["status"=>true, "message"=>"No notifications for this user", "data"=>$data]);
+            return response()->json(["status"=>true, "message"=>"No notifications for this user"],404);
         }
 
-        return response()->json(["status"=>true, "message"=>"Notifications found", "data"=>$data]);
+        return response()->json(["status"=>true, "message"=>"Notifications found", "data"=>$data]);    
+    }
+
+    public function storeContact(Request $request){
+        
+        $connection = Connection::create($request->all());
+    }
+
+    public function getContacts(Request $request){
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(["status" => false, "message" => "Not Authorized"],401);
+        }
+
 
         
+        $data = Connection::where('userId',$user->id)->get();
 
+        if($data->isEmpty()){
+            return response()->json(["status"=>true, "message"=>"No one contacted you yet"],404);
+        }
 
-
-        
-
+        return response()->json(["status"=>true, "message"=>"Some contacted you ", "data"=>$data],200);   
     }
 
 

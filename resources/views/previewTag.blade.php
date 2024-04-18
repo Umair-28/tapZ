@@ -76,8 +76,8 @@
 </div>
 
 
-    <div style="padding:6px;margin-left:8px;margin-top:10px;">
-        <div>
+    <div style="margin-top:10px;">
+        <div style="padding-left:10px;">
             <h1 style="display: inline-block;">
             @if($tag->category === 'kid' || $tag->category === 'pet')
             {{ ucfirst($tag->name) }}
@@ -91,17 +91,56 @@
                 @else
                 {{$tag->luggageType}}
                 @endif
-            )</p> 
-        </div>
-  <div style="display: flex; align-items: flex-start;">
-    <div style="margin-right: 10px;">
-        <img src="/images/location.png" alt="">
-    </div>
-    <div style="flex-grow: 1;">
-       
-        <p style="margin:0;font-size:14px;font-weight:500;color:gray;margin-top:1px;word-wrap:break-word;">{{$tag->address}}</p>
+                
+            ) 
+            <div id="locationButton"  class="shareBox1" style="cursor:pointer;" onclick="getLocation()">
+             <img src="/images/share-location.png" alt="" style="margin-top:2px;padding:0;">
+             <p style=" margin:0;margin-top:-5px;display: inline-block; font-size:12px;font-weight:400;color:gray;vertical-align:middle;">Location</p>
+            </div>
+
+           <div class="share-box2" style="margin-right:-78px;cursor:pointer;" onclick="openModal()">
+    <img src="/images/share-location.png" alt="" style="padding:0;vertical-align:middle;">
+    <p style="" class="share-text">Contact</p>
+</div>
+            </p> 
+
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+
+       <div class="modal-image">
+        <img src="/{{ $image->path }}" alt="">
+       </div>
+       <div class="form_contact_info">
+                <form action="" id="Form">
+
+
+
+<p style="margin-left:15px; color:red;" id="ErrorMessage"></p>
+
+<input type="text" id="id" name="id" value="sZaU9zFpxPXeipu8E62UWmq7Rfo2" hidden>
+
+<label class="input_label" for="name">Full Name</label>
+<input type="text" class="input_field" name="name" id="name" placeholder="Enter Name" required>
+
+<label class="input_label" for="email">Email</label>
+<input type="email" class="input_field" name="email" id="email" placeholder="Enter Email" required>
+
+<label class="input_label" for="phone">Phone Number</label>
+<input type="tel" class="input_field" name="phone" id="phone" placeholder="Enter Mobile Number" pattern="[0-9+]+" title="Phone number should contain only numbers and the plus sign (+)." required>
+
+
+<label class="input_label" for="message">Message</label>
+<textarea type="text" class="input_field" name="message" id="message" placeholder="Write Message" style="min-height:100px; max-width:94%; min-width:94%" required></textarea>
+
+                <input type="hidden" name="" value="{{$tag->id}}">
+<input type="submit" class="submit" id="submit"  value="Share Contact">
+                </form>
     </div>
 </div>
+        </div>
+
         <div>
                 @if($tag->category === 'luggage')
                  <img src="{{asset($data['luggageContact'])}}" alt="" style="vertical-align: middle;">
@@ -111,7 +150,7 @@
                  <img src="{{asset($data['petContact'])}}" alt=""  style="vertical-align: middle;"> 
                 @endif 
             
-            <p style="display: inline-block;margin-left:6px;font-size:13px;font-weight:400;color:gray;">
+            <p style="margin-top: -10px;display: inline-block;margin-left:6px;font-size:12px;font-weight:400;color:gray;">
             @if($tag->category === 'pet' || $tag->category === 'luggage')
             {{ucfirst($tag->ownerName)}}
             @else
@@ -122,6 +161,16 @@
    
 
         </div>
+             
+        <div style="display: flex; align-items: flex-start;">
+                <div style="margin-right: 10px;">
+                  <img src="/images/location.png" alt="">
+                </div>
+              <div style="flex-grow: 1;">
+                <p style="margin:0;margin-top:4px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;max-width: 180px;">{{$tag->address}}</p>
+               </div>
+        </div>
+
     </div>
 
     <div class="info-tags">
@@ -133,14 +182,14 @@
             <img src="{{asset($data['luggageBrand'])}}" alt="">
             @endif
 
-            <p style="margin:4px 0px;font-size:14px;font-weight:500;">
+            <p class="tag-heading">
             @if($tag->category === 'kid' || $tag->category === 'pet')
                 Gender
             @else
             Brand
             @endif 
             </p>
-            <p style="margin:0;font-size:13px;font-weight:400;color:gray;white-space: nowrap;">
+            <p class="tag-value">
                 @if($tag->category === 'kid' || $tag->category === 'pet')
                 {{ $tag->gender }}
             @else
@@ -155,14 +204,14 @@
             @else
             <img src="{{asset($data['luggageType'])}}" alt="">
             @endif
-            <p style="margin:4px 0px;font-size:14px;font-weight:500;">
+            <p class="tag-heading">
                 @if($tag->category === 'kid' || $tag->category === 'pet') 
                 Age
                 @else
                 Type
                 @endif
             </p>
-            <p style="margin:0;font-size:13px;font-weight:400;color:gray; white-space: nowrap;">
+            <p class="tag-value">
                 @if($tag->category === 'kid' || $tag->category === 'pet') 
                 {{ $tag->age }}
                 @elseif($tag->category === 'luggage')
@@ -178,7 +227,7 @@
             @elseif($tag->category === 'kid')
              <img src="/images/height.png" alt="">
             @endif
-            <p  style="margin:4px 0px;font-size:14px;font-weight:500;"  >
+            <p  class="tag-heading"  >
             
             
                 @if($tag->category === 'kid') 
@@ -187,7 +236,7 @@
                  Weight
                 @endif
             </p>
-            <p  style="margin:0;font-size:13px;font-weight:400;color:gray; white-space: nowrap;">
+            <p class="tag-value">
                 @if($tag->category === 'kid') 
                  {{ $tag->height}} Feet
                  @elseif($tag->category === 'pet')
@@ -205,15 +254,15 @@
             @endif
 
             @if($tag->category === 'pet' || $tag->category === 'luggage')
-            <p  style="margin:4px 0px;font-size:14px;font-weight:500;white-space: nowrap;">Color</p>
+            <p  class="tag-heading">Color</p>
             @elseif($tag->category  === 'kid')
-            <p style="margin:4px 0px;font-size:14px;font-weight:500;white-space: nowrap;">Dress Color</p>
+            <p class="tag-heading">Dress Color</p>
             @endif
 
             @if($tag->category === 'pet' || $tag->category === 'luggage')
-            <p  style="margin:0;font-size:13px;font-weight:400;color:gray; white-space: nowrap;">{{ $tag->color }}</p>
+            <p class="tag-value">{{ $tag->color }}</p>
             @elseif($tag->category === 'kid')
-            <p  style="margin:0;font-size:13px;font-weight:400;color:gray; white-space: nowrap;">{{ $tag->dressColor }}</p>
+            <p class="tag-value">{{ $tag->dressColor }}</p>
             @endif
         </div>
 
@@ -234,13 +283,15 @@
             <div style="margin-top: 8px;">
                 @if($tag->category === 'luggage')
                 <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['luggageFontColor']}};">Reward</p>
-                <p style="font-size: 14px; line-height: 1;word-wrap:break-word; margin-top:3px;">A reward of <span style="color:{{$data['luggageFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the kid</p>
+                <p style="font-size: 14px; line-height: 1.2;word-wrap:break-word; margin-top:3px;">A reward of <span style="color:{{$data['luggageFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the luggage.</p>
                 @elseif($tag->category === 'kid')
                 <p  style="margin:0;font-size:18px;font-weight:700;color:{{$data['kidFontColor']}};">Reward</p>
-                <p style="font-size: 14px; line-height: 1;word-wrap:break-word; margin-top:3px;">A reward of <span style="color:{{$data['kidFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the kid</p>
+                <p style="font-size: 14px; line-height: 1.2;word-wrap:break-word; margin-top:3px;">A reward of <span style="color:{{$data['kidFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the kid.</p>
                 @else
                 <p  style="margin:0;font-size:18px;font-weight:700;color:{{$data['petFontColor']}};">Reward</p>
-                <p style="font-size: 14px; line-height: 1;word-wrap:break-word; margin-top:3px;">A reward of <span style="color:{{$data['petFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the kid</p>
+                <p style="font-size: 14px; line-height: 1.2; word-wrap: normal; margin-top: 3px;">
+    A reward of <span style="color: {{ $data['petFontColor'] }}; font-weight: 600;">${{ $tag->reward }}</span> will be given to whoever finds the pet.
+</p>
                 @endif
             </div>
         </div>
@@ -259,17 +310,21 @@
     <div class="grid">
     <div>
         <p class="heading" style="font-weight: 500;padding-left:10px;">Mobile Number</p>
-        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;margin-top:4px;padding-left:10px;">{{$tag->mobileNumber}}</p>
+        <p class="additional-info-value">{{$tag->mobileNumber}}</p>
     </div>
-    @if(!empty($tag->mobileNumber2))
+   
     <div>
         <p class="heading" style="font-weight: 500;padding-left:10px;">Secondary Number</p>
-        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;;margin-top:4px;padding-left:10px;">{{$tag->mobileNumber2}}</p>
+        @if(!empty($tag->mobileNumber2))
+        <p class="additional-info-value">{{$tag->mobileNumber2}}</p>
+        @else
+        <p class="additional-info-value">N/A</p>
+        @endif
     </div>
-    @endif
+   
     <div>
         <p class="heading" style="font-weight: 500;padding-left:10px;">Contact Email</p>
-        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;margin-top:4px;padding-left:10px;">{{$tag->contactEmail}}</p>
+        <p class="additional-info-value">{{$tag->contactEmail}}</p>
     </div>
  
 </div>
@@ -294,18 +349,18 @@
 
         <div>
         <p class="heading" style="font-weight: 500;margin-top:24px;margin-bottom:3px;padding-left:10px;">Address</p>
-        <p style=" margin:0;font-size:14px;font-weight:500;color:gray;margin-top:1px;padding-left:10px;word-wrap:wrap;">{{$tag->address}}</p>
+        <p class="additional-info-value">{{$tag->address}}</p>
     </div>
 
         @if($tag->category === 'pet')
         <div style="margin-top:5px ">
             <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;">Vet Details</p>
-            <p style="font-size:15px; text-align:justify;color:gray;margin-top:1px;padding-left:10px;">{{$tag->vetDetail}}</p>
+            <p class="additional-info-value">{{$tag->vetDetail}}</p>
         </div>
         @elseif($tag->category === 'kid')
         <div style="margin-top:5px ">
             <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;">Doctor Detail</p>
-            <p style="font-size:15px; text-align:justify;color:gray;margin-top:1px;padding-left:10px;">{{$tag->doctorDetail}}</p>
+            <p class="additional-info-value">{{$tag->doctorDetail}}</p>
         </div>
 
         @endif
@@ -314,7 +369,7 @@
 
         <div style="margin-top:5px ">
             <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;;">Medical Issue</p>
-            <p style="font-size:15px; text-align:justify;color:gray;margin-top:1px;padding-left:10px;">{{$tag->medicalIssue}}</p>
+            <p class="additional-info-value">{{$tag->medicalIssue}}</p>
         </div>
 
         @endif
@@ -322,7 +377,7 @@
         @if(!empty($tag->note))
     <div style="margin-top: 5px;">
         <p style="margin: 0; margin-top: 24px; margin-bottom: 3px; font-size: 16px; font-weight: 500;padding-left:10px;">Note</p>
-        <p style="font-size: 15px; text-align: justify; color: gray; margin-top: 2px;padding-left:10px;">{{ $tag->note }}</p>
+        <p style="font-size: 12px; text-align: justify; color: gray; margin-top: 2px;padding-left:10px;padding-right:10px;">{{ $tag->note }}</p>
     </div>
       @endif
 </div>

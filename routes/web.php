@@ -18,3 +18,4 @@ use App\Http\Controllers\TagController;
 
 Route::get('/tag/{id}', [TagController::class, 'previewTag']);
 Route::post('/tagLocation', [TagController::class, 'tagLocation']);
+Route::post('/store-contact', [TagController::class, 'storeContact']);

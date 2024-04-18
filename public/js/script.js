@@ -1,4 +1,4 @@
-window.onload = function() {
+document.getElementById("locationButton").addEventListener("click", function() {
     let lat;
     let lng;
     var userId = document.getElementById("userId").value;
@@ -36,7 +36,7 @@ window.onload = function() {
         // Construct the URL with the latitude and longitude values
         const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
 
-        // Make a GET request to the API endpoint
+    
         fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -106,4 +106,77 @@ window.onload = function() {
 
     // Call getLocation function to start geolocation process
     getLocation();
-};
+});
+
+
+// modal
+
+// Function to open the modal
+function openModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "block";
+}
+
+// Function to close the modal
+function closeModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+}
+
+// Function to handle form submission
+document.getElementById("Form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent default form submission behavior
+    var name = document.getElementById("name").value;
+    var phone = document.getElementById("phone").value;
+    
+    // Here you can add code to handle form submission, such as sending data to a server via AJAX
+    
+    // Close the modal after form submission
+    closeModal();
+});
+
+// Contact form
+
+document.getElementById("Form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    // Retrieve form field values
+    var name = document.getElementById("name").value;
+    var phone = document.getElementById("phone").value;
+    var email = document.getElementById("email").value;
+    var message = document.getElementById("message").value;
+    var tagId = document.getElementById("tagId").value;
+    var userId = document.getElementById("userId").value;
+
+    // Log form field values to the console
+    console.log("Name: " + name);
+    console.log("Phone Number: " + phone);
+    console.log("Email: " + email);
+    console.log('Message: ' + message);
+    console.log('Tagid: ' + tagId);
+
+    fetch('/store-contact', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // Include CSRF token
+        },
+        body: JSON.stringify({ name:name, email:email, phone_number:phone, message:message, tagId:tagId, userId:userId }), // Include lat and lng in the request body
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Handle the response from the server if needed
+        console.log(data);
+    })
+    .catch(error => {
+        // Handle errors
+        console.error('There was a problem with the fetch operation:', error);
+    });
+});
+
+    
+
