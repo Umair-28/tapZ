@@ -283,13 +283,13 @@
             <div style="margin-top: 8px;">
                 @if($tag->category === 'luggage')
                 <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['luggageFontColor']}};">Reward</p>
-                <p style="font-size: 14px; line-height: 1.2;word-wrap:break-word; margin-top:3px;">A reward of <span style="color:{{$data['luggageFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the luggage.</p>
+                <p style="font-size: 14px; line-height: 1.2; margin-top:3px; word-wrap: normal;">A reward of <span style="color:{{$data['luggageFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to whoever finds the luggage.</p>
                 @elseif($tag->category === 'kid')
-                <p  style="margin:0;font-size:18px;font-weight:700;color:{{$data['kidFontColor']}};">Reward</p>
-                <p style="font-size: 14px; line-height: 1.2;word-wrap:break-word; margin-top:3px;">A reward of <span style="color:{{$data['kidFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to<br> whoever finds the kid.</p>
+                <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['kidFontColor']}};">Reward</p>
+                <p style="font-size: 14px; line-height: 1.2;word-wrap:break-word; margin-top:3px;">A reward of <span style="color:{{$data['kidFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to whoever finds the kid.</p>
                 @else
-                <p  style="margin:0;font-size:18px;font-weight:700;color:{{$data['petFontColor']}};">Reward</p>
-                <p style="font-size: 14px; line-height: 1.2; word-wrap: normal; margin-top: 3px;">
+                <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['petFontColor']}};">Reward</p>
+                <p style="font-size: 14px; line-height: 1.2; word-wrap: break-word; margin-top: 3px;">
     A reward of <span style="color: {{ $data['petFontColor'] }}; font-weight: 600;">${{ $tag->reward }}</span> will be given to whoever finds the pet.
 </p>
                 @endif

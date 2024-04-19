@@ -347,7 +347,7 @@ left: 20px;
   float:right;
   border:1px solid black;
   border:1px solid black;
-  margin-top:70px;
+  margin-top:60px;
   margin-left: -2px;
   
   border-radius:20px;
@@ -357,7 +357,7 @@ left: 20px;
 .share-box2{
   float:right;
   border:1px solid black;
-  margin-top:110px;
+  margin-top:100px;
   margin-right:-70px;
   border-radius:20px;
   padding:5px 11px;
@@ -406,7 +406,7 @@ body{
     align-items: center;
     padding: 5px 0px;
     margin-top: 10px;
-    justify-content: space-between;
+    justify-content: center;
     
     width: 100%;
 }
@@ -600,7 +600,7 @@ h1{
   float:right;
   border:1px solid black;
   border:1px solid black;
-  margin-top:75px;
+  margin-top:65px;
   margin-left: -6px;
   border-radius:20px;
   padding:4px 8px;
@@ -610,7 +610,7 @@ h1{
 .share-box2{
   float:right;
   border:1px solid black;
-  margin-top:115px;
+  margin-top:102px;
   margin-right:-70px;
   border-radius:20px;
   padding:5px 11px;
