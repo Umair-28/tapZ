@@ -416,6 +416,10 @@ class TagController extends Controller
                 // Delete the image record from the database
                 $image->delete();
             }
+            $notifications = Notification::where('tagId',$id)->get();
+            foreach($notifications as $notification){
+                $notification->delete();
+            }
             $tag->delete();
             return response()->json([
                 "status" => true,
@@ -454,6 +458,7 @@ class TagController extends Controller
         $record->note = strval($record->note);
         $record->category = strval($record->category);
         $record->userId = strval($record->userId);
+        $record->lost_mode  = boolval($record->lost_mode); 
 
         return $record;
 
@@ -697,6 +702,8 @@ class TagController extends Controller
     public function storeContact(Request $request){
         
         $connection = Connection::create($request->all());
+
+        dd('Contact has been saved successfully');
     }
 
     public function getContacts(Request $request){
@@ -716,6 +723,33 @@ class TagController extends Controller
         }
 
         return response()->json(["status"=>true, "message"=>"Some contacted you ", "data"=>$data],200);   
+    }
+
+    public function toggleLostStatus(Request $request, $id){
+
+        
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(["status" => false, "message" => "Not Authorized"],401);
+        }
+
+        $tag = Tag::where('id',$id)->first();
+        if($tag){
+            
+            $tag->lost_mode = $request->input('lost_mode');
+            
+            $tag->save();
+
+
+
+            
+            return response()->json(["status"=>true,"message"=>"Tag lost status updated", "data"=>$tag]);
+        }
+
+        return response()->json(["status"=>false,"message"=>"Tag not found"],404);
+
+
     }
 
 

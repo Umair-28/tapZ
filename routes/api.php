@@ -42,6 +42,7 @@ Route::prefix('tag')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/getByCategory/{category}', [TagController::class, 'getTagsByCategory']);
     Route::get('/getAllTags', [TagController::class, 'getAllTags']);
     Route::delete('/image/{id}', [TagController::class, 'deleteImage']);
+    Route::post('/toggleStatus/{id}', [TagController::class, 'toggleLostStatus']);
   
 });
 

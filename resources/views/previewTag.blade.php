@@ -8,6 +8,7 @@
 <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script> -->
+<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 <input type="hidden" id="userId" value="{{$tag->userId}}" />
 <input type="hidden" id="tagId" value="{{$tag->id}}" />
 <input type="hidden" id="tagCategory" value="{{$tag->category}}" />
@@ -16,6 +17,9 @@
     <script src="{{ asset('js/script.js') }}" defer></script> 
     <title>Document</title>
     <style>
+        *{
+            font-family: 'Poppins';
+        }
         .controls-container {
             position: absolute;
             bottom: 0;
@@ -93,21 +97,31 @@
                 @endif
                 
             ) 
-            <div id="locationButton"  class="shareBox1" style="cursor:pointer;" onclick="getLocation()">
-             <img src="/images/share-location.png" alt="" style="margin-top:2px;padding:0;">
-             <p style=" margin:0;margin-top:-5px;display: inline-block; font-size:12px;font-weight:400;color:gray;vertical-align:middle;">Location</p>
-            </div>
+            <div class="btns">
+                <div id="locationButton"  class="shareBox1" style="cursor:pointer;" onclick="getLocation()">
+                   <button>
+                   <img width="20" height="20" src="/images/new-location.png" style="vertical-align:middle;"/>
+                    <p style="margin:0;margin-top:-1px;display: inline-block; font-size:12px;font-weight:400;color:rgba(255,73,73,1); ;vertical-align:middle;">Location</p>
+                   </button>
+                </div>
 
-           <div class="share-box2" style="margin-right:-78px;cursor:pointer;" onclick="openModal()">
-    <img src="/images/share-location.png" alt="" style="padding:0;vertical-align:middle;">
-    <p style="" class="share-text">Contact</p>
-</div>
+                <div class="share-box2" style="cursor:pointer;" onclick="openModal()">
+                    <button>
+                    <img width="24" height="24"  src="https://img.icons8.com/sf-ultralight-filled/100/FF0749/share.png"  alt="share" style="vertical-align:middle;"/>
+                    <p style="color:rgba(255,73,73,1);" class="share-text">Contact</p>
+                    </button>
+                </div>
+            </div>
             </p> 
 
 <div id="myModal" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
+
+        <div class="logo2">
+        <img src="/images/Tapz.png" alt="">
+    </div>
 
        <div class="modal-image">
         <img src="/{{ $image->path }}" alt="">
@@ -143,14 +157,14 @@
 
         <div>
                 @if($tag->category === 'luggage')
-                 <img src="{{asset($data['luggageContact'])}}" alt="" style="vertical-align: middle;">
+                 <img src="{{asset($data['luggageContact'])}}" alt="" style=" width:30px;height:30px; vertical-align: middle;">
                  @elseif($tag->category === 'kid')
-                 <img src="{{asset($data['kidContact'])}}" alt=""  style="vertical-align: middle;">
+                 <img src="{{asset($data['kidContact'])}}" alt=""  style=" width:30px;height:30px;vertical-align: middle;margin-top:-13px;">
                  @else
-                 <img src="{{asset($data['petContact'])}}" alt=""  style="vertical-align: middle;"> 
+                 <img src="{{asset($data['petContact'])}}" alt="" style="width:30px;height:30px;"  style="vertical-align: middle;"> 
                 @endif 
             
-            <p style="margin-top: -10px;display: inline-block;margin-left:6px;font-size:12px;font-weight:400;color:gray;">
+            <p style=";display: inline-block;margin-top:-1px;margin-left:6px;font-size:12px;font-weight:400;color:gray;vertical-align:middle;">
             @if($tag->category === 'pet' || $tag->category === 'luggage')
             {{ucfirst($tag->ownerName)}}
             @else
@@ -164,10 +178,10 @@
              
         <div style="display: flex; align-items: flex-start;">
                 <div style="margin-right: 10px;">
-                  <img src="/images/location.png" alt="">
+                  <img src="/images/location.png" alt=""  style="width:26px;height:26px;>
                 </div>
               <div style="flex-grow: 1;">
-                <p style="margin:0;margin-top:4px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;max-width: 180px;">{{$tag->address}}</p>
+                <p style="margin:0;margin-left:14px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;max-width: 170px;vertical-align:middle;float:right;">{{ucfirst($tag->address)}}</p>
                </div>
         </div>
 
@@ -177,9 +191,9 @@
 
         <div class="tag">
             @if($tag->category === 'pet' || $tag->category === 'kid')
-            <img src="/images/heart.png" alt="">
+            <img src="/images/heart.png" alt="" style="width:26px;height:26px;">
             @else
-            <img src="{{asset($data['luggageBrand'])}}" alt="">
+            <img src="{{asset($data['luggageBrand'])}}" alt="" style="width:26px;height:26px;">
             @endif
 
             <p class="tag-heading">
@@ -200,9 +214,9 @@
 
         <div class="tag">
             @if($tag->category === 'kid' || $tag->category === 'pet')
-            <img src="/images/age.png" alt="">
+            <img src="/images/age.png" alt="" style="width:24px;height:24px;">
             @else
-            <img src="{{asset($data['luggageType'])}}" alt="">
+            <img src="{{asset($data['luggageType'])}}" alt=""  style="width:26px;height:26px;">
             @endif
             <p class="tag-heading">
                 @if($tag->category === 'kid' || $tag->category === 'pet') 
@@ -223,9 +237,9 @@
         @if($tag->category === 'kid' || $tag->category === 'pet')
          <div class="tag">
             @if($tag->category === 'pet')
-             <img src="/images/weight.png" alt="">
+             <img src="/images/weight.png" alt="" style="width:28px;height:28px;">
             @elseif($tag->category === 'kid')
-             <img src="/images/height.png" alt="">
+             <img src="/images/height.png" alt="" style="width:28px;height:28px;">
             @endif
             <p  class="tag-heading"  >
             
@@ -248,9 +262,9 @@
 
         <div class="tag">
             @if($tag->category === 'pet' || $tag->category === 'luggage')
-            <img src="/images/color.png" alt="">
+            <img src="/images/color.png" alt="" style="width:28px;height:28px;">
             @elseif($tag->category === 'kid')
-            <img src="/images/dressColor.png" alt="">
+            <img src="/images/dressColor.png" alt="" style="width:28px;height:28px;">
             @endif
 
             @if($tag->category === 'pet' || $tag->category === 'luggage')
@@ -269,29 +283,30 @@
 
     </div>
 
- 
-
-    <div class="reward-tag" style="">
+                @if($tag->lost_mode === 1)
+                <div class="reward-tag" style="">
         <div style="display: flex; align-items: center;">
             @if($tag->category === 'luggage')
-             <img src="{{asset($data['luggageRewardImage'])}}" alt="" style="margin-right: 5px; height: 60px; width: 60px;"> 
+             <img src="{{asset($data['luggageRewardImage'])}}" alt="" style="margin-right: 5px; height: 55px; width: 55px;"> 
             @elseif($tag->category === 'kid')
-             <img src="{{asset($data['kidRewardImage'])}}" alt="" style="margin-right: 5px; height: 60px; width: 60px;"> 
+             <img src="{{asset($data['kidRewardImage'])}}" alt="" style="margin-right: 5px; height: 55px; width: 55px;"> 
             @else
-             <img src="{{asset($data['petRewardImage'])}}" alt="" style="margin-right: 5px; height: 60px; width: 60px;">
+             <img src="{{asset($data['petRewardImage'])}}"  alt="" style="margin-right: 5px; height: 55px; width: 55px;">
             @endif 
-            <div style="margin-top: 8px;">
+            <div style="margin-top: 4px;">
                 @if($tag->category === 'luggage')
                 <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['luggageFontColor']}};">Reward</p>
-                <p style="font-size: 14px; line-height: 1.2; margin-top:3px; word-wrap: normal;">A reward of <span style="color:{{$data['luggageFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to whoever finds the luggage.</p>
+                <p style="font-size: 13px; line-height: 1.2; margin-top:3px; word-wrap: normal;color:gray;">A reward will be given to whoever finds the luggage.</p>
                 @elseif($tag->category === 'kid')
-                <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['kidFontColor']}};">Reward</p>
-                <p style="font-size: 14px; line-height: 1.2;word-wrap:break-word; margin-top:3px;">A reward of <span style="color:{{$data['kidFontColor']}};font-weight:600;">${{ $tag->reward }}</span> will be given to whoever finds the kid.</p>
+               <div style="">
+               <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['kidFontColor']}};">Reward</p>
+                <p style="font-size: 13px; line-height: 1.2;word-wrap:break-word; margin-top:3px;color:gray;">A reward will be given to whoever finds the kid.</p>
+               </div>
                 @else
                 <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['petFontColor']}};">Reward</p>
-                <p style="font-size: 14px; line-height: 1.2; word-wrap: break-word; margin-top: 3px;">
-    A reward of <span style="color: {{ $data['petFontColor'] }}; font-weight: 600;">${{ $tag->reward }}</span> will be given to whoever finds the pet.
-</p>
+                <p style="font-size: 13px; line-height: 1.2; word-wrap: break-word; margin-top: 1px;color:gray;">
+                      A reward  will be given to whoever finds the pet.
+                </p>
                 @endif
             </div>
         </div>
@@ -305,6 +320,9 @@
             @endif
         </div>
     </div>
+                @endif
+
+                
 
     <div class="additional-info">
     <div class="grid">
@@ -377,7 +395,7 @@
         @if(!empty($tag->note))
     <div style="margin-top: 5px;">
         <p style="margin: 0; margin-top: 24px; margin-bottom: 3px; font-size: 16px; font-weight: 500;padding-left:10px;">Note</p>
-        <p style="font-size: 12px; text-align: justify; color: gray; margin-top: 2px;padding-left:10px;padding-right:10px;">{{ $tag->note }}</p>
+        <p class="additional-info-value">{{ $tag->note }}</p>
     </div>
       @endif
 </div>

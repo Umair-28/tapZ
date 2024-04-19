@@ -79,6 +79,7 @@
       height: 20px;
       cursor: pointer;
       color: black;
+      font-size: 13px;
       padding: 1px;
       border-radius: 50%;
       text-align: center;
@@ -109,6 +110,19 @@
     z-index: 1;
   }
 
+  .logo2{
+    position: absolute;
+    left: 50%;
+    top:110px;
+    transform: translate(-50%,-50%);
+    z-index: 1;
+  }
+  
+  .logo2 img{
+    width: 70px;
+    height: 35px;
+  }
+
   
   h1{
     font-size:24px;
@@ -122,8 +136,8 @@
     border-radius: 14px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
     margin-right: 8px;
-    padding: 2%;
-    width: 24%;
+    padding: 2% 1%;
+    width: 22%;
     /* box-sizing: border-box;  */
   }
   
@@ -140,6 +154,7 @@
     margin-top: 10px;
     padding: 10px 5px;
     width: 95%;
+    margin-left: 10px;
     border-radius: 10px;
     box-shadow: 0 0px 3.1px rgba(0,0,0,0.25);
   } 
@@ -159,11 +174,12 @@
 
   .additional-info-value{
     margin:0;
-    font-size:15px;
+    font-size:13px;
     font-weight:500;
     color:gray;
     margin-top:4px;
     padding-left:10px;
+    padding-right: 10px;
   }
 
   .grid{
@@ -347,7 +363,7 @@ left: 20px;
   float:right;
   border:1px solid black;
   border:1px solid black;
-  margin-top:60px;
+  margin-top:12px;
   margin-left: -2px;
   
   border-radius:20px;
@@ -357,26 +373,35 @@ left: 20px;
 .share-box2{
   float:right;
   border:1px solid black;
-  margin-top:100px;
-  margin-right:-70px;
+  margin-top:52px;
+  margin-right:-91px;
   border-radius:20px;
-  padding:5px 11px;
+  padding:3px 9px;
   border-color:rgba(255,73,73,1);
    
 }
 
 .tag-value{
   margin:0;
-  font-size:18px;
+  font-size:13px;
   font-weight:400;
   color:gray; 
   white-space: nowrap;
 }
 .tag-heading{
   margin:4px 0px;
-  font-size:17px;
+  font-size:14px;
   font-weight:500;
   text-wrap:balance;
+}
+
+button{
+  border:none;
+  background-color: white;
+  padding: 0;
+  cursor: pointer;
+  
+  
 }
 
 
@@ -391,12 +416,14 @@ left: 20px;
 
 /* 430 Width Media Query */
 
-@media (min-width: 360px) and (max-width: 460px) {
+@media (min-width: 260px) and (max-width: 576px) {
 body{
     margin: 0;
     padding: 15px;
     padding-left: 5px;
+    margin: 0 auto;
     box-sizing: border-box;
+    max-width: 400px;
   
     
 }
@@ -416,9 +443,20 @@ body{
     left: 50%;
     top:60px;
     transform: translate(-50%,-50%);
-  
-   
     z-index: 1;
+}
+
+.logo2{
+  position: absolute;
+  left: 50%;
+  top:150px;
+  transform: translate(-50%,-50%);
+  z-index: 1;
+}
+
+.logo2 img{
+  width: 70px;
+  height: 35px;
 }
 
 h1{
@@ -482,11 +520,12 @@ h1{
 
 .additional-info-value{
   margin:0;
-  font-size:12px;
+  font-size:11px;
   font-weight:500;
   color:gray;
   margin-top:4px;
   padding-left:10px;
+  padding-right: 10px;
 }
 
 
@@ -520,7 +559,7 @@ h1{
 
 
 .slide img {
-  width: 80%;
+  width: 90%;
   text-align: center;
   height: auto; 
   border-radius: 10px;
@@ -567,8 +606,10 @@ h1{
   cursor: pointer;
   color: black;
   padding: 1px;
+  font-size: 13px;
   border-radius: 50%;
   text-align: center;
+  vertical-align: middle;
   background-color: rgba(0, 0, 0, 0.3);
   border: 1px solid black;
 }
@@ -582,7 +623,7 @@ h1{
 }
 .heading {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   white-space: nowrap; /* Ensure heading stays on a single line */
 }
@@ -600,23 +641,31 @@ h1{
   float:right;
   border:1px solid black;
   border:1px solid black;
-  margin-top:65px;
+  margin-top:10px;
   margin-left: -6px;
   border-radius:20px;
-  padding:4px 8px;
+  padding:4px 7px;
   border-color:rgba(255,73,73,1);
 }
 
 .share-box2{
   float:right;
   border:1px solid black;
-  margin-top:102px;
-  margin-right:-70px;
+  margin-top:50px;
+  margin-right:-84px;
   border-radius:20px;
-  padding:5px 11px;
+  padding:3px 8px;
   border-color:rgba(255,73,73,1);
   cursor: pointer;
    
+}
+
+button{
+  border:none;
+  background-color: white;
+  padding: 0;
+  cursor: pointer;
+  
 }
 
 /* modal */
@@ -762,14 +811,14 @@ left: 20px;
 
 .tag-value{
   margin:0;
-  font-size:14px;
+  font-size:11px;
   font-weight:400;
   color:gray; 
   white-space: nowrap;
 }
 .tag-heading{
   margin:4px 0px;
-  font-size:14px;
+  font-size:12px;
   font-weight:500;
 }
 
