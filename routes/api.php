@@ -56,7 +56,7 @@ Route::post('/reset-password', [OtpController::class, 'resetPassword']);
 
 Route::middleware('auth:sanctum')->get('/get-notifications', [TagController::class, 'getNotifications']);
 Route::middleware('auth:sanctum')->delete('/account/image', [TagController::class, 'deleteUserImage']);
-Route::middleware('auth:sanctum')->get('/getContacts', [TagController::class, 'getContacts']);
+Route::middleware('auth:sanctum')->get('/getContact/{id}', [TagController::class, 'getContacts']);
 
 
 Route::get('/unauthenticated', function(){

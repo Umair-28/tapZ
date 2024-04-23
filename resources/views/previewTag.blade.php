@@ -101,7 +101,7 @@
 
                 <div class="share-box2" style="cursor:pointer;" onclick="openModal()">
                     <button>
-                    <img width="24" height="24"  src="https://img.icons8.com/sf-ultralight-filled/100/FF0749/share.png"  alt="share" style="vertical-align:middle;"/>
+                    <img width="18" height="18"  src="https://img.icons8.com/ios-glyphs/30/FF0749/add-user-male.png"   alt="share" style="vertical-align:middle;margin-top:-3px;margin-right:1px;"/>
                     <p style="color:rgba(255,73,73,1);" class="share-text">Contact</p>
                     </button>
                 </div>
@@ -129,18 +129,21 @@
 
 <input type="text" id="id" name="id" value="sZaU9zFpxPXeipu8E62UWmq7Rfo2" hidden>
 
-<label class="input_label" for="name">Full Name</label>
-<input type="text" class="input_field" name="name" id="name" placeholder="Enter Name" required>
+<label class="input_label" for="name">Full Name *</label>
+<input type="text" class="input_field" name="name" required id="name" placeholder="Enter Name" required>
+
+<label class="input_label" for="phone">Phone Number *</label>
+<input type="tel" class="input_field" name="phone" id="phone" autocomplete=off required placeholder="Enter Mobile Number" pattern="[0-9+]+" title="Phone number should contain only numbers and the plus sign (+)." required>
 
 <label class="input_label" for="email">Email</label>
-<input type="email" class="input_field" name="email" id="email" placeholder="Enter Email" required>
+<input type="email" class="input_field" name="email" id="email" placeholder="Enter Email" autocomplete=off>
 
-<label class="input_label" for="phone">Phone Number</label>
-<input type="tel" class="input_field" name="phone" id="phone" placeholder="Enter Mobile Number" pattern="[0-9+]+" title="Phone number should contain only numbers and the plus sign (+)." required>
+
 
 
 <label class="input_label" for="message">Message</label>
-<textarea type="text" class="input_field" name="message" id="message" placeholder="Write Message" style="min-height:100px; max-width:94%; min-width:94%" required></textarea>
+<textarea type="text" class="input_field" name="message" maxlength="100" id="message" placeholder="Write Message" style="min-height:100px; max-width:94%; min-width:94%" required></textarea>
+<div id="charCount" style="float:right;margin-top:-50px"></div>
 
                 <input type="hidden" name="" value="{{$tag->id}}">
 <input type="submit" class="submit" id="submit"  value="Share Contact">
@@ -172,7 +175,7 @@
              
         <div style="display: flex; align-items: flex-start;">
                 <div style="margin-right: 10px;">
-                  <img src="/images/location.png" alt=""  style="width:26px;height:26px;margin-top:-4px;>
+                  <img src="/images/location.png" alt=""  style="width:24px;height:24px;margin-top:-4px;>
                 </div>
               <div style="flex-grow: 1;">
                 <p style="margin:0;margin-left:11px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;max-width: 170px;vertical-align:middle;float:right;">{{ucfirst($tag->address)}}</p>
@@ -276,44 +279,57 @@
 
 
     </div>
-
-                @if($tag->lost_mode === 1)
-                <div class="reward-tag" style="">
-        <div style="display: flex; align-items: center;">
-            @if($tag->category === 'luggage')
-             <img src="{{asset($data['luggageRewardImage'])}}" alt="" style="margin-right: 5px; height: 55px; width: 55px;"> 
-            @elseif($tag->category === 'kid')
-             <img src="{{asset($data['kidRewardImage'])}}" alt="" style="margin-right: 5px; height: 55px; width: 55px;"> 
-            @else
-             <img src="{{asset($data['petRewardImage'])}}"  alt="" style="margin-right: 5px; height: 55px; width: 55px;">
-            @endif 
-            <div style="margin-top: 4px;">
-                @if($tag->category === 'luggage')
-                <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['luggageFontColor']}};">Reward</p>
-                <p style="font-size: 13px; line-height: 1.2; margin-top:3px; word-wrap: normal;color:gray;">A reward will be given to whoever finds the luggage.</p>
-                @elseif($tag->category === 'kid')
-               <div style="">
-               <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['kidFontColor']}};">Reward</p>
-                <p style="font-size: 13px; line-height: 1.2;word-wrap:break-word; margin-top:3px;color:gray;">A reward will be given to whoever finds the kid.</p>
-               </div>
-                @else
-                <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['petFontColor']}};">Reward</p>
-                <p style="font-size: 13px; line-height: 1.2; word-wrap: break-word; margin-top: 1px;color:gray;">
-                      A reward  will be given to whoever finds the pet.
-                </p>
+                <!-- for luggage -->
+                @if($tag->lost_mode === 1 && $tag->category === 'luggage')
+                 <div class="reward-tag" style="box-shadow:0px 0px 3.8px rgba(73, 255, 211, 1);">
+                    <div style="display: flex; align-items: center;">
+                        <img src="{{asset($data['luggageRewardImage'])}}" alt="" style="margin-right: 5px; height: 55px; width: 55px;"> 
+                         <div style="margin-top: 4px;">
+                            <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['luggageFontColor']}};">Reward</p>
+                            <p style="font-size: 13px; line-height: 1.2; margin-top:3px; word-wrap: normal;color:gray;">A reward will be given to whoever finds the luggage.</p>
+                         </div>
+                    </div>
+                        <div>
+                            <p style="margin:0;margin-left:10px;font-size:30px;font-weight:700;color:{{$data['luggageFontColor']}};padding-right :20px;">${{ $tag->reward }}</p>
+                        </div>
+                    </div>
                 @endif
-            </div>
-        </div>
-        <div>
-            @if($tag->category === 'luggage')
-            <p style="margin:0;margin-left:10px;font-size:30px;font-weight:700;color:{{$data['luggageFontColor']}};padding-right :20px;">${{ $tag->reward }}</p>
-            @elseif($tag->category === 'kid')
-            <p style="margin:0;margin-left:10px;font-size:30px;font-weight:700;color:{{$data['kidFontColor']}};padding-right :20px;">${{ $tag->reward }}</p>
-            @else
-            <p style="margin:0;margin-left:10px;font-size:30px;font-weight:700;color:red;padding-right :20px;">${{ $tag->reward }}</p>
-            @endif
-        </div>
-    </div>
+
+                 <!-- for pet -->
+                @if($tag->lost_mode === 1 && $tag->category === 'pet')
+                    <div class="reward-tag" style="box-shadow:0px 0px 3.5px rgba(252, 26, 64, 1)">
+                     <div style="display: flex; align-items: center;">
+                        <img src="{{asset($data['petRewardImage'])}}"  alt="" style="margin-right: 5px; height: 55px; width: 55px;">
+                        
+                            <div style="margin-top: 4px;">
+                                <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['petFontColor']}};">Reward</p>
+                                <p style="font-size: 13px; line-height: 1.2; word-wrap: break-word; margin-top: 1px;color:gray;">
+                                    A reward  will be given to whoever finds the pet.
+                                </p>  
+                            </div>
+                     </div>
+                     <div>
+                      <p style="margin:0;margin-left:10px;font-size:30px;font-weight:700;color:red;padding-right :20px;">${{ $tag->reward }}</p>
+                     </div>
+                    </div>
+                @endif
+
+                 <!-- for kid -->
+                @if($tag->lost_mode === 1 && $tag->category === 'kid')
+                 <div class="reward-tag" style="box-shadow:0px 0px 4px rgba(255, 196, 0, 1)">
+                    <div style="display: flex; align-items: center;">  
+                        <img src="{{asset($data['kidRewardImage'])}}" alt="" style="margin-right: 5px; height: 55px; width: 55px;"> 
+                        <div style="margin-top: 4px;">
+                         <div style="">
+                            <p  style="margin:0;font-size:16px;font-weight:700;color:{{$data['kidFontColor']}};">Reward</p>
+                            <p style="font-size: 13px; line-height: 1.2;word-wrap:break-word; margin-top:3px;color:gray;">A reward will be given to whoever finds the kid.</p>
+                         </div>
+                        </div>
+                    </div>
+                        <div>
+                         <p style="margin:0;margin-left:10px;font-size:30px;font-weight:700;color:{{$data['kidFontColor']}};padding-right :20px;">${{ $tag->reward }}</p>
+                         </div>
+                    </div>
                 @endif
 
                 
@@ -322,7 +338,7 @@
     <div class="grid">
     <div>
         <p class="heading" style="font-weight: 500;padding-left:10px;">Mobile Number</p>
-        <p class="additional-info-value">{{$tag->mobileNumber}}</p>
+        <a  style="text-decoration:none;" href="tel:{{$tag->mobileNumber}}" class="additional-info-value">{{$tag->mobileNumber}}</a>
     </div>
    
     <div>
@@ -335,29 +351,12 @@
     </div>
    
     <div>
-        <p class="heading" style="font-weight: 500;padding-left:10px;">Contact Email</p>
+        <p class="heading" style="font-weight: 500;padding-left:10px;">Email</p>
         <p class="additional-info-value">{{$tag->contactEmail}}</p>
     </div>
  
 </div>
-        <!-- <div style="" class="grid">
-            <div>
-                <p style=" margin:0;font-size:16px;font-weight:600;">Mobile Number</p>
-                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray;">{{$tag->mobileNumber}}</p>
-            </div>
-            <div>
-                <p style=" margin:0;font-size:16px;font-weight:600;">Secondary Number</p>
-                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray">{{$tag->mobileNumber2}}</p>
-            </div>
-            <div>
-                <p style=" margin:0;font-size:16px;font-weight:600;">Contact Email</p>
-                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray">{{ $tag->contactEmail }}</p>
-            </div>
-            <div>
-                <p style=" margin:0;font-size:16px;font-weight:600;">Address</p>
-                <p  style=" margin:0;font-size:14px;font-weight:500;color:gray">{{$tag->address}}</p>
-            </div>
-        </div> -->
+
 
         <div>
         <p class="heading" style="font-weight: 500;margin-top:24px;margin-bottom:3px;padding-left:10px;">Address</p>
@@ -394,6 +393,7 @@
       @endif
 </div>
     <script>
+        
   let slideIndex = 0;
   let slideInterval;
 
@@ -452,6 +452,24 @@
 
   // Start auto-scrolling when the page loads
   startAutoScroll();
+
+
+  //text length
+  const messageInput = document.getElementById('message');
+    const charCountDisplay = document.getElementById('charCount');
+
+    // Add event listener for input events
+    messageInput.addEventListener('input', updateCharCount);
+
+    // Function to update character count
+    function updateCharCount() {
+        const maxLength = messageInput.getAttribute('maxlength');
+        const currentLength = messageInput.value.length;
+        charCountDisplay.textContent = `${currentLength}/${maxLength}`;
+    }
+
+    // Initial call to set the initial character count
+    updateCharCount();
 </script>
 
     

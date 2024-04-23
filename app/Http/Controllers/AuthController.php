@@ -164,6 +164,18 @@ class AuthController extends Controller
                     $account->facebookId = $request->socialId;
                 }
 
+                $images = Image::where('userId', $account->id)->get();
+
+                if($images){
+                    foreach ($images as $img) {
+                        if ($img->path != "") {
+                            $url = url($img->path);
+                            $account->userImage  = $url;
+                          
+                        }
+                    }
+                }
+
                 
 
                 $account->save();

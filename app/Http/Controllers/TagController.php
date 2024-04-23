@@ -673,7 +673,7 @@ class TagController extends Controller
                 'latitude'=>$latitude,
                 'longitude'=>$longitude,
                 'tag_category' => $tag_category,
-                // 'type'=> 'location'
+                'type'=> 'location'
             ]);
             return $result;
         }else{
@@ -695,28 +695,36 @@ class TagController extends Controller
 
 
         
-        $notifications = Notification::where('userId',$user->id)->where('userId',$user->id)->get();
+        $notifications = Notification::where('userId',$user->id)->get();
 
-        $contacts = Connection::where('userId',$user->id)->get();
-
-        $tagScanned = Notification::where('userId', $user->id)->where('userId',$user->id)->get();
+        foreach ($notifications as $notif) {
+            $notif->name = "";
+            $notif->email = "";
+            $notif->message = "";
+            
+            if($notif->type == "contact")
+            {
+                $conn = Connection::find($notif->tagId);
+                if($conn)
+                {
+                    $notif->name = $conn->name;
+                    $notif->email = $conn->email;
+                    $notif->message = $conn->message;
+                    $notif->phoneNumber = $conn->phone_number;
+                    $notif->contactId = $notif->tagId;
+                    $notif->tagId = null;
+                }
+            }
+        }
 
         
 
-        $data = [
-            'notifications' => $notifications,
-            'contacts' => $contacts,
-            'tagScanned' => $tagScanned
-        ];
-
-        
-
-        return response()->json(["status"=>true, "message"=>"Notifications found", "data"=>$data]);    
+        return response()->json(["status"=>true, "message"=>"Notifications found", "data"=>$notifications]);    
     }
 
 
 
-    public function getContacts(Request $request){
+    public function getContacts(Request $request, $id){
 
         $user = Auth::user();
 
@@ -726,13 +734,17 @@ class TagController extends Controller
 
 
         
-        $data = Connection::where('userId',$user->id)->get();
+        $data = Connection::where('id',$id)->where('userId',$user->id)->first();
 
-        if($data->isEmpty()){
-            return response()->json(["status"=>true, "message"=>"No one contacted you yet"],404);
-        }
+         if($data){
+            $data->userId = (int) $data->userId;
+            $data->tagId = (int) $data->tagId;
+            return response()->json(["status"=>true, "message"=>"Some one contacted you ", "data"=>$data],200); 
+         }
 
-        return response()->json(["status"=>true, "message"=>"Some contacted you ", "data"=>$data],200);   
+         return response()->json(["status"=>false, "message"=>"No one contacted you"],404); 
+
+        
     }
 
     public function toggleLostStatus(Request $request, $id){
@@ -765,8 +777,11 @@ class TagController extends Controller
 
     public function storeContact(Request $request){
 
+       
+
         $connection = Connection::create($request->all());
         $userId =  $connection->userId;
+        $tagId =  $connection->id;
         $userName = $request->name;
 
         $fcmToken = Account::where('id',$userId)->value('fcmToken');
@@ -830,7 +845,15 @@ class TagController extends Controller
     // Close curl after call
     curl_close($ch);
     if ($result) {
-
+        $notification = Notification::create([
+            'address' => null,
+            'userId' => $userId,
+            'tagId' => $tagId,
+            'latitude'=>"",
+            'longitude'=>"",
+            'tag_category' => "",
+            'type'=> 'contact'
+        ]);
         return $result;
     }else{
         return response()->json(["status"=>false, "message"=>"Error Saving Message in Mysql"]);
@@ -853,7 +876,7 @@ public function pageScanned(Request $request){
         'userId' => $userId,
         'tagId' => $tagId,
         'tag_category' => $tag_category,
-        // 'type' => 'scanned',
+        'type' => 'page',
         'address' => null
     ]); 
 
