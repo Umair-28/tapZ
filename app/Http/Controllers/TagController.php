@@ -237,6 +237,7 @@ class TagController extends Controller
                 'contactEmail' => $record->contactEmail,
                 'address' => $record->address,
                 'note' => $record->note,
+                'lost_mode' => $record->lost_mode,
 
                 // Add other fields from $record as needed
                 'images' => []
@@ -293,14 +294,15 @@ class TagController extends Controller
             'ownerName' => $request->category === "kid" ? "nullable" : "required|string",
             'gender' => $request->category === 'luggage' ? "nullable" : "required|in:Male,Female",
             'age' => $request->category === 'luggage' ? "nullable" : "required",
-            'medicalIssue' => $request->category === 'luggage' ? "nullable" : "required|string",
+            'medicalIssue' => $request->category === 'luggage' ? "nullable" : "nullable|string",
             'height' => $request->category === 'kid' ? "required" : "nullable",
             'weight' => $request->category === 'pet' ? "required" : "nullable",
             'color' => $request->category === 'pet' ? "required" : "nullable",
             'dressColor' => $request->category === 'kid' ? "required" : "nullable",
-            'vetDetail' => $request->category === 'pet' ? "required" : "nullable",
+            'vetDetail' => $request->category === 'luggage' ? "nullable" : "nullable|string",
             'brand' => $request->category === 'luggage' ? "required" : "nullable",
             'luggageType' => $request->category === 'luggage' ? "required" : "nullable",
+            'doctorDetail' => $request->category === 'luggage' ? "nullable" : "nullable|string",
             'reward' => "required|string",
             'mobileNumber' => "required|string",
             'mobileNumber2' => "string|nullable",
@@ -670,7 +672,8 @@ class TagController extends Controller
                 'tagId' => $tagId,
                 'latitude'=>$latitude,
                 'longitude'=>$longitude,
-                'tag_category' => $tag_category
+                'tag_category' => $tag_category,
+                // 'type'=> 'location'
             ]);
             return $result;
         }else{
@@ -688,23 +691,30 @@ class TagController extends Controller
             return response()->json(["status" => false, "message" => "Not Authorized"],401);
         }
 
+        $data = [];
+
 
         
-        $data = Notification::where('userId',$user->id)->get();
+        $notifications = Notification::where('userId',$user->id)->where('userId',$user->id)->get();
 
-        if($data->isEmpty()){
-            return response()->json(["status"=>true, "message"=>"No notifications for this user"],404);
-        }
+        $contacts = Connection::where('userId',$user->id)->get();
+
+        $tagScanned = Notification::where('userId', $user->id)->where('userId',$user->id)->get();
+
+        
+
+        $data = [
+            'notifications' => $notifications,
+            'contacts' => $contacts,
+            'tagScanned' => $tagScanned
+        ];
+
+        
 
         return response()->json(["status"=>true, "message"=>"Notifications found", "data"=>$data]);    
     }
 
-    public function storeContact(Request $request){
-        
-        $connection = Connection::create($request->all());
 
-        dd('Contact has been saved successfully');
-    }
 
     public function getContacts(Request $request){
 
@@ -753,7 +763,199 @@ class TagController extends Controller
     }
 
 
+    public function storeContact(Request $request){
+
+        $connection = Connection::create($request->all());
+        $userId =  $connection->userId;
+        $userName = $request->name;
+
+        $fcmToken = Account::where('id',$userId)->value('fcmToken');
+            
+
+    // FCM API Url
+    $url = 'https://fcm.googleapis.com/fcm/send';
+
+    // Put your Server Key here
+    $apiKey = "AAAAaqsOano:APA91bEOzteQsyRTPwUJYVwg63oJNjlPvT6gxPttNojm7Ybohxv2W5u0uIKceg976U_M2ueTPyg9YvGIfL341DyvURDsRWLyCdtT13Q631wtwZjfJ3I9wrVZRAEJA_gm8AlAXE8rE2gg";
+
+    // Compile headers in one variable
+    $headers = array(
+        'Authorization:key=' . $apiKey,
+        'Content-Type:application/json'
+    );
+    $message = "$userName has exchanged contact information.";
+    
+    // Add notification content to a variable for easy reference
+    $notifData = [
+        'title' => "Contact Shared",
+        'body' => $message,
+        "sound" => "default",
+        //  "image": "url-to-image",//Optional
+        // 'click_action' => "activities.NotifHandlerActivity" //Action/Activity - Optional
+    ];
+
+    $dataPayload = [
+        'to' => 'My Name',
+        'points' => 80,
+        'phone_number' => $request->phone_number,
+        'name' => $userName,
+        'email' => $request->email,
+        'tagId' => $request->tagId,
+        'userId' => $userId,
+        'tag_category' => $request->tag_category,
+
+    ];
+
+  
+
+    // Create the api body
+    $apiBody = [
+        'notification' => $notifData,
+        'data' => $dataPayload, //Optional
+        'time_to_live' => 600, // optional - In Seconds
+        //'to' => '/topics/mytargettopic'
+        //'registration_ids' = ID ARRAY
+        'to' => $fcmToken,
+    ];
+    // Initialize curl with the prepared headers and body
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($apiBody));
+
+    // Execute call and save result
+    $result = curl_exec($ch);
+    // Close curl after call
+    curl_close($ch);
+    if ($result) {
+
+        return $result;
+    }else{
+        return response()->json(["status"=>false, "message"=>"Error Saving Message in Mysql"]);
+    }
+
+
+}//function bracket
+
+
+public function pageScanned(Request $request){
+
+    $userId = $request->userId;
+    $tagId = $request->tagId;
+    $tag_category = $request->tag_category;
+
+   
+   
+
+    Notification::create([
+        'userId' => $userId,
+        'tagId' => $tagId,
+        'tag_category' => $tag_category,
+        // 'type' => 'scanned',
+        'address' => null
+    ]); 
+
+
+    $fcmToken = Account::where('id',$userId)->value('fcmToken');
+        
+
+// FCM API Url
+$url = 'https://fcm.googleapis.com/fcm/send';
+
+// Put your Server Key here
+$apiKey = "AAAAaqsOano:APA91bEOzteQsyRTPwUJYVwg63oJNjlPvT6gxPttNojm7Ybohxv2W5u0uIKceg976U_M2ueTPyg9YvGIfL341DyvURDsRWLyCdtT13Q631wtwZjfJ3I9wrVZRAEJA_gm8AlAXE8rE2gg";
+
+// Compile headers in one variable
+$headers = array(
+    'Authorization:key=' . $apiKey,
+    'Content-Type:application/json'
+);
+$message = "Your $tag_category tag has been scanned";
+
+// Add notification content to a variable for easy reference
+$notifData = [
+    'title' => "QR scanned",
+    'body' => $message,
+    "sound" => "default",
+    //  "image": "url-to-image",//Optional
+    // 'click_action' => "activities.NotifHandlerActivity" //Action/Activity - Optional
+];
+
+$dataPayload = [
+    'to' => 'My Name',
+    'points' => 80,
+    'tagId' => $tagId,
+    'tag_category' => $tag_category
+
+
+];
+
+
+
+// Create the api body
+$apiBody = [
+    'notification' => $notifData,
+    'data' => $dataPayload, //Optional
+    'time_to_live' => 600, // optional - In Seconds
+    //'to' => '/topics/mytargettopic'
+    //'registration_ids' = ID ARRAY
+    'to' => $fcmToken,
+];
+// Initialize curl with the prepared headers and body
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($apiBody));
+
+
+
+// Execute call and save result
+$result = curl_exec($ch);
+// Close curl after call
+curl_close($ch);
+if ($result) {
+
+    return $result;
+}else{
+    return response()->json(["status"=>false, "message"=>"Error Saving Message in Mysql"]);
 }
+
+
+}//function bracket
+
+
+
+public function deleteNotification(Request $request)
+{
+    $user = Auth::user();
+
+    if (!$user) {
+        return response()->json(["status" => false, "message" => "Not Authorized"], 401);
+    }
+
+    // Retrieve IDs from the request
+    $ids = $request->input('ids');
+
+    // Delete the notifications based on the array of IDs
+    $deletedCount = Notification::whereIn('id', $ids)->delete();
+
+    // Check if any notifications were deleted
+    if ($deletedCount > 0) {
+        return response()->json(["status" => true, "message" => "Notifications deleted successfully"], 200);
+    }
+
+    return response()->json(["status" => false, "message" => "No notifications were deleted"], 404);
+}
+
+
+
+
+
+}//class bracket
 
 
 

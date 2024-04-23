@@ -58,25 +58,19 @@
     </div>
 
     <div class="slider-container">
-        
-        <div class="slider">
+    <div class="slider">
         @foreach($images as $image)
-
-
+            <div class="slide"><img src="/{{ $image->path }}" alt="Image"></div>
+        @endforeach
+    </div>
     
-    <div class="slide"><img src="/{{ $image->path }}" alt="Image"></div>
-  @endforeach
-          <!-- <div class="slide"><img src="/images/image.png" alt="Slide 1"></div>
-          <div class="slide"><img src="/images/image.png" alt="Slide 1"></div>
-          <div class="slide"><img src="/images/image.png" alt="Slide 1"></div> -->
-        </div>
-        
-      
-  <div class="controls">
-    <div class="control-btn" onclick="prevSlide()">&#10094;</div>
-    <div class="control-btn" onclick="nextSlide()">&#10095;</div>
-  </div>
-  <div class="slider-indicator"></div>
+    @if(count($images) > 1)
+    <div class="controls">
+        <div class="control-btn" onclick="prevSlide()">&#10094;</div>
+        <div class="control-btn" onclick="nextSlide()">&#10095;</div>
+    </div>
+    <div class="slider-indicator"></div>
+    @endif
 </div>
 
 
@@ -157,14 +151,14 @@
 
         <div>
                 @if($tag->category === 'luggage')
-                 <img src="{{asset($data['luggageContact'])}}" alt="" style=" width:30px;height:30px; vertical-align: middle;">
+                 <img src="{{asset($data['luggageContact'])}}" alt="" style=" width:26px;height:26px;">
                  @elseif($tag->category === 'kid')
-                 <img src="{{asset($data['kidContact'])}}" alt=""  style=" width:30px;height:30px;vertical-align: middle;margin-top:-13px;">
+                 <img src="{{asset($data['kidContact'])}}" alt=""  style=" width:26px;height:26px;vertical-align: middle;margin-top:-13px;">
                  @else
-                 <img src="{{asset($data['petContact'])}}" alt="" style="width:30px;height:30px;"  style="vertical-align: middle;"> 
+                 <img src="{{asset($data['petContact'])}}" alt="" style="width:26px;height:26px;"  style="vertical-align: middle;"> 
                 @endif 
             
-            <p style=";display: inline-block;margin-top:-1px;margin-left:6px;font-size:12px;font-weight:400;color:gray;vertical-align:middle;">
+            <p style=";display: inline-block;margin-top:-1px;margin-left:6px;font-size:12px;font-weight:400;color:gray;vertical-align:middle;word-wrap:break-word;max-width: 170px;">
             @if($tag->category === 'pet' || $tag->category === 'luggage')
             {{ucfirst($tag->ownerName)}}
             @else
@@ -178,10 +172,10 @@
              
         <div style="display: flex; align-items: flex-start;">
                 <div style="margin-right: 10px;">
-                  <img src="/images/location.png" alt=""  style="width:26px;height:26px;>
+                  <img src="/images/location.png" alt=""  style="width:26px;height:26px;margin-top:-4px;>
                 </div>
               <div style="flex-grow: 1;">
-                <p style="margin:0;margin-left:14px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;max-width: 170px;vertical-align:middle;float:right;">{{ucfirst($tag->address)}}</p>
+                <p style="margin:0;margin-left:11px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;max-width: 170px;vertical-align:middle;float:right;">{{ucfirst($tag->address)}}</p>
                </div>
         </div>
 
@@ -203,7 +197,7 @@
             Brand
             @endif 
             </p>
-            <p class="tag-value">
+            <p class="tag-value" style="white-space:normal;text-align:center">
                 @if($tag->category === 'kid' || $tag->category === 'pet')
                 {{ $tag->gender }}
             @else
@@ -225,7 +219,7 @@
                 Type
                 @endif
             </p>
-            <p class="tag-value">
+            <p class="tag-value"  style="white-space:normal;text-align:center">
                 @if($tag->category === 'kid' || $tag->category === 'pet') 
                 {{ $tag->age }}
                 @elseif($tag->category === 'luggage')
@@ -250,7 +244,7 @@
                  Weight
                 @endif
             </p>
-            <p class="tag-value">
+            <p class="tag-value"  style="white-space:normal;text-align:center">
                 @if($tag->category === 'kid') 
                  {{ $tag->height}} Feet
                  @elseif($tag->category === 'pet')
@@ -274,9 +268,9 @@
             @endif
 
             @if($tag->category === 'pet' || $tag->category === 'luggage')
-            <p class="tag-value">{{ $tag->color }}</p>
+            <p class="tag-value"  style="white-space:normal;text-align:center">{{ $tag->color }}</p>
             @elseif($tag->category === 'kid')
-            <p class="tag-value">{{ $tag->dressColor }}</p>
+            <p class="tag-value"  style="white-space:normal;text-align:center">{{ $tag->dressColor }}</p>
             @endif
         </div>
 

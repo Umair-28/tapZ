@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File;
 use App\Models\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -65,7 +66,6 @@ class AuthController extends Controller
     {
         $validationRules = [
             "email" => "required|email",
-            "password" => "required|string",
             "platform" => "required|string",
             "loginWith" => "required|in:facebook,google,email",
             "fcmToken" => "required|string"
@@ -76,6 +76,25 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(["status" => false, "message" => $validator->errors()->first()], 422);
         }
+
+        if($request->loginWith != "email")
+        {
+           return $this->socialLogin($request);
+        }
+
+        $validationRules = [
+            
+            "password" => "required|string",
+            
+        ];
+
+        $validator = Validator::make($request->all(), $validationRules);
+
+        if ($validator->fails()) {
+            return response()->json(["status" => false, "message" => $validator->errors()->first()], 422);
+        }
+
+
 
         $user = Account::where('email', $request->email)->first();
         if ($user) {
@@ -124,7 +143,56 @@ class AuthController extends Controller
             return response()->json(["status"=>false, "message"=>"Email not found"],401);
         }
     }
+    public function socialLogin(Request $request)
+        {
+            if($request->socialId == null){
+                return response()->json(["status"=>false,"message"=>"socialId is required"]);
+            }
 
+            $account = Account::where('email',$request->email)->first();
+            
+            if($account){
+
+                $account->loginWith = $request->loginWith; 
+                $account->fcmToken = $request->fcmToken;
+                $account->platform = $request->platform; 
+
+                if($request->loginWith === 'google'){
+                    $account->googleId = $request->socialId;
+                }
+                elseif($request->loginWith === 'facebook'){
+                    $account->facebookId = $request->socialId;
+                }
+
+                
+
+                $account->save();
+            }else{
+                
+                $account = Account::create([
+                    'fullName' => $request->fullName,
+                    'email' => $request->email,
+                    'password' => Hash::make(Str::random(8)),
+                    'googleId' => $request->loginWith == "google" ? $request->socialId : "",
+                    'facebookId' => $request->loginWith == "facebook" ? $request->socialId : "",
+                    'loginWith' => $request->loginWith, 
+                    'fcmToken' => $request->fcmToken,
+                    'platform' => $request->platform, 
+    
+                ]);
+               
+                
+            }
+
+            $token = $account->createToken('auth-token')->plainTextToken;
+                $userData = $account;
+                $userData['token'] = $token;
+
+            return response()->json(["status"=>true, "message"=>'Logged in successfully', "data"=>$userData],200);
+
+
+
+        }
     public function deleteAccount(){
 
         $user = Auth::user();
