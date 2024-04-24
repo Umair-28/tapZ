@@ -95,7 +95,7 @@
                 <div id="locationButton"  class="shareBox1" style="cursor:pointer;" onclick="getLocation()">
                    <button>
                    <img width="20" height="20" src="/images/new-location.png" style="vertical-align:middle;"/>
-                    <p style="margin:0;margin-top:-1px;display: inline-block; font-size:12px;font-weight:400;color:rgba(255,73,73,1); ;vertical-align:middle;">Location</p>
+                    <p style="margin:0;margin-top:-1px;display: inline-block; font-size:12px;font-weight:400;color:rgba(255,73,73,1); margin-right: 15px;;vertical-align:middle;">Allow</p>
                    </button>
                 </div>
 
@@ -178,7 +178,7 @@
                   <img src="/images/location.png" alt=""  style="width:24px;height:24px;margin-top:-4px;>
                 </div>
               <div style="flex-grow: 1;">
-                <p style="margin:0;margin-left:11px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;max-width: 170px;vertical-align:middle;float:right;">{{ucfirst($tag->address)}}</p>
+                <p style="  margin:0;margin-left:11px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;vertical-align:middle;float:right; max-width: 175px;"  >{{ucfirst($tag->address)}}</p>
                </div>
         </div>
 

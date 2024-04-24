@@ -621,7 +621,7 @@ class TagController extends Controller
             'Authorization:key=' . $apiKey,
             'Content-Type:application/json'
         );
-        $message = "Your tag has been Found";
+        $message = "Your $tag_category tag has been found";
         
         // Add notification content to a variable for easy reference
         $notifData = [

@@ -1,4 +1,8 @@
 @media (min-width: 577px) {
+
+  *{
+    font-family: 'Poppins';
+}
   body{
     margin: 0;
     padding: 16px 4px;
@@ -92,14 +96,7 @@
     }
   
   
-  .info-tags{
-    display: flex;
-    align-items: center;
-    padding: 5px 8px;
-    justify-content: center;
-    width: 100%;
-    margin-top: 10px;
-  }
+ 
   
   .logo{
     position: absolute;
@@ -136,7 +133,7 @@
     font-size:24px;
     font-weight:700;
   }
-  
+  /*
   .tag {
     display: flex;
     flex-direction: column;
@@ -146,26 +143,65 @@
     margin-right: 8px;
     padding: 2% 1%;
     width: 22%;
-    /* box-sizing: border-box;  */
+   
   }
-  
-  
-  
-  
   .reward-tag {
     display: flex;
      justify-content: space-between; 
      align-items: center;
-  
-    margin: 0 auto;
+      margin: 0 auto;
     margin-left:10px;
     margin-top: 10px;
     padding: 10px 5px;
     width: 95%;
     margin-left: 10px;
     border-radius: 10px;
-    /* box-shadow: 0 0px 3.1px rgba(0,0,0,0.25); */
-  } 
+   
+  } */
+   /* .info-tags{
+    display: flex;
+    align-items: center;
+    padding: 5px 8px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+  } */
+
+  .info-tags {
+    display: flex; /* Use flexbox for layout */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px auto;
+    padding-bottom: 10px; /* Add some bottom padding to prevent horizontal scrollbar from overlapping content */
+  }
+  
+  .tag {
+    flex: 0 0 auto; /* Allow tags to shrink and grow as needed */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 14px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    padding: 1.5% 2%;
+
+    min-width: 63px;
+    margin-top: 3px;
+    margin-left: 9px;
+  }
+  
+  .reward-tag {
+    flex: 0 0 auto; /* Allow rewards tags to shrink and grow as needed */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px;
+    
+    border-radius: 10px;
+    margin-right: 3px; /* Add some right margin between rewards tags */
+    margin-left: 10px;
+  }
+    
   
   .additional-info{
    
@@ -387,8 +423,10 @@ button{
   background-color: white;
   padding: 0;
   cursor: pointer;
-  
-  
+}
+
+.owner-address{
+  max-width: 250px;
 }
 
 
@@ -404,6 +442,10 @@ button{
 /* 430 Width Media Query */
 
 @media (min-width: 260px) and (max-width: 576px) {
+
+  *{
+    font-family: 'Poppins';
+}
 body{
     margin: 0;
     padding: 15px;
@@ -415,15 +457,7 @@ body{
     
 }
 
-.info-tags{
-    display: flex;
-    align-items: center;
-    padding: 5px 0px;
-    margin-top: 10px;
-    justify-content: center;
-    
-    width: 100%;
-}
+
 
 .logo{
     position: absolute;
@@ -450,6 +484,16 @@ body{
 h1{
     font-size:24px;
     font-weight:700;
+}
+
+/* .info-tags{
+  display: flex;
+  align-items: center;
+  padding: 5px 0px;
+  margin-top: 10px;
+  justify-content: center;
+  
+  width: 100%;
 }
 
 .tag {
@@ -491,7 +535,61 @@ h1{
     width: 92%;
     border-radius: 10px;
     box-shadow: 0 0px 3.1px rgba(0,0,0,0.25);
-} 
+}  */
+
+
+.info-tags {
+  display: flex; /* Use flexbox for layout */
+  overflow-x: visible; /* Enable horizontal scrolling */
+  align-items: center;
+  justify-content: space-between;
+  margin: 14px auto;
+  margin-left: 10px;
+  padding-bottom: 10px; /* Add some bottom padding to prevent horizontal scrollbar from overlapping content */
+}
+
+.tag {
+  flex: 0 0 auto; /* Allow tags to shrink and grow as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 14px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  padding: 2% 1.4%;
+  margin-right: 10px; /* Add some right margin between tags */
+  min-width: 63px;
+  margin-top: 3px;
+}
+
+.tag:first-child{
+  flex: 0 0 auto; /* Allow tags to shrink and grow as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 14px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  padding: 2% 1.4%;
+  margin-right: 10px; /* Add some right margin between tags */
+  min-width: 63px;
+  margin-left: 1px;
+  margin-top: 3px;
+}
+
+.reward-tag {
+  display: flex;
+   justify-content: space-between; 
+   align-items: center;
+
+  margin: 0 auto;
+  margin-left:12px;
+  margin-top: 10px;
+  
+  padding: 2px 5px;
+  width: 92%;
+  border-radius: 10px;
+  box-shadow: 0 0px 3.1px rgba(0,0,0,0.25);
+}
+
 
 .additional-info{
    
@@ -636,6 +734,7 @@ h1{
   border:1px solid black;
   margin-top:2px;
   margin-left: -6px;
+  margin-right: 10px;
   border-radius:20px;
   padding:4px 7px;
   border-color:rgba(255,73,73,1);
@@ -794,6 +893,10 @@ left: 20px;
   margin:4px 0px;
   font-size:12px;
   font-weight:500;
+}
+
+.owner-address{
+  max-width: 170px;
 }
 
 
