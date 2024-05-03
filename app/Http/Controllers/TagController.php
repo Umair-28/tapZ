@@ -203,6 +203,8 @@ class TagController extends Controller
 
     public function getAllTags(Request $request)
     {
+        
+
         $user = Auth::user();
         $userId = $user->id;
         $data = Tag::where('userId', $userId)->get();

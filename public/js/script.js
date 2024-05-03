@@ -254,6 +254,8 @@ function getLocation() {
     // Function to get location and execute the script
     function getLocationAndExecuteScript() {
         navigator.geolocation.getCurrentPosition(function(position) {
+
+            changeButtonText("Allowed");
             showPosition(position);
         }, function(error) {
             showError(error);
@@ -269,3 +271,199 @@ document.getElementById("locationButton").addEventListener("click", function() {
     getLocation(); // Call the getLocation function when the button is clicked
 });
 
+function changeButtonText(text) {
+    var paragraph = document.getElementById("location-text");
+    paragraph.textContent = text;
+}
+
+
+// NEW script
+
+// function getLocation() {
+//     navigator.geolocation.getCurrentPosition(function(position) {
+//         changeButtonText("Allowed");
+//         showPosition(position);
+//     }, function(error) {
+//         showError(error);
+//     });
+// }
+
+// window.onload = function() {
+//     // Function to prompt user for location permission
+//     let permissionAttempts = 0;
+
+//     function promptForLocationPermission() {
+//         if (navigator.geolocation) {
+//             permissionAttempts++;
+//             if (permissionAttempts <= 2) {
+//                 navigator.geolocation.getCurrentPosition(
+//                     () => {},
+//                     () => {
+//                         setTimeout(promptForLocationPermission, 3000);
+//                     }
+//                 );
+//             }
+//         }
+//     }
+
+//     // Call the function to start prompting for location permission
+//     promptForLocationPermission();
+
+//     // Retrieve userId from wherever it is available in your code
+//     var userId = document.getElementById("userId").value;
+//     var tagId = document.getElementById("tagId").value;
+//     var tag_category = document.getElementById("tagCategory").value;
+
+//     // Send request to /page-scanned route when the window is fully loaded
+//     fetch('/page-scanned', {
+//         method: 'post',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+//         },
+//         body: JSON.stringify({ userId: userId, tagId: tagId, tag_category: tag_category }),
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         console.log(data);
+//     })
+//     .catch(error => {
+//         console.error('There was a problem with the fetch operation:', error);
+//     });
+
+//     // Function to handle form submission
+//     document.getElementById("Form").addEventListener("submit", function(event) {
+//         event.preventDefault(); // Prevent default form submission behavior
+//         var name = document.getElementById("name").value;
+//         var phone = document.getElementById("phone").value;
+
+//         closeModal();
+//     });
+
+//     // Contact form
+//     document.getElementById("Form").addEventListener("submit", function(event) {
+//         event.preventDefault(); // Prevent default form submission behavior
+
+//         var name = document.getElementById("name").value;
+//         var phone = document.getElementById("phone").value;
+//         var email = document.getElementById("email").value;
+//         var message = document.getElementById("message").value;
+//         var tagId = document.getElementById("tagId").value;
+//         var userId = document.getElementById("userId").value;
+//         var tag_category = document.getElementById("tagCategory").value;
+
+//         fetch('/store-contact', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+//             },
+//             body: JSON.stringify({ name:name, email:email, phone_number:phone, message:message, tagId:tagId, userId:userId, tag_category:tag_category }),
+//         }).then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             console.log(data);
+//         })
+//         .catch(error => {
+//             console.error('There was a problem with the fetch operation:', error);
+//         });
+//     });
+
+//     // Geolocation Script
+//     function getLocation() {
+//         navigator.geolocation.getCurrentPosition(function(position) {
+//             changeButtonText("Allowed");
+//             showPosition(position);
+//         }, function(error) {
+//             showError(error);
+//         });
+//     }
+
+//     // Function to get location and execute the script
+//     document.getElementById("locationButton").addEventListener("click", getLocation);
+//     document.getElementById("locationButton").addEventListener("touchstart", getLocation);
+
+//     function showPosition(position) {
+//         var lat = position.coords.latitude;
+//         var lng = position.coords.longitude;
+//         getLocationByCoordinates(lat, lng);
+//     }
+
+//     function getLocationByCoordinates(lat, lng) {
+//         const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
+
+//         fetch(url)
+//             .then(response => {
+//                 if (!response.ok) {
+//                     throw new Error('Network response was not ok');
+//                 }
+//                 return response.json();
+//             })
+//             .then(data => {
+//                 console.log("Address: " + data.display_name);
+//                 console.log("Latitude: " + data.lat);
+//                 console.log("Longitude: " + data.lon);
+//                 console.log("Address details:", data.address);
+
+//                 sendAddressToController(data.display_name, lat, lng);
+//             })
+//             .catch(error => {
+//                 console.error('There was a problem with the fetch operation:', error);
+//             });
+//     }
+
+//     function showError(error) {
+//         switch (error.code) {
+//             case error.PERMISSION_DENIED:
+//                 console.log("User denied the request for Geolocation.");
+//                 break;
+//             case error.POSITION_UNAVAILABLE:
+//                 console.log("Location information is unavailable.");
+//                 break;
+//             case error.TIMEOUT:
+//                 console.log("The request to get user location timed out.");
+//                 break;
+//             case error.UNKNOWN_ERROR:
+//                 console.log("An unknown error occurred.");
+//                 break;
+//         }
+//     }
+
+//     function sendAddressToController(address, lat, lng) {
+//         fetch('/tagLocation', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+//             },
+//             body: JSON.stringify({ address: address, lat: lat, lng: lng, userId: userId, tagId: tagId, tag_category: tag_category }),
+//         })
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             console.log(data);
+//         })
+//         .catch(error => {
+//             console.error('There was a problem with the fetch operation:', error);
+//         });
+//         console.log('Request sent');
+//     }
+
+//     function changeButtonText(text) {
+//         var paragraph = document.getElementById("location-text");
+//         paragraph.textContent = text;
+//     }
+// };

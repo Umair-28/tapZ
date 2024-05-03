@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
 <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -53,9 +55,22 @@
 
 
 <body>
+
+    @if($tag->lost_mode === 0)
     <div class="logo">
         <img src="/images/Tapz.png" alt="">
     </div>
+        @endif
+
+
+        @if($tag->lost_mode === 1)
+        <div class="lost-logo">
+        <img src="/images/Tapz.png" alt="">
+    </div>
+        <div class="lost-lost">
+           <img src="/images/lost.png" alt="">
+        </div>
+        @endif
 
     <div class="slider-container">
     <div class="slider">
@@ -83,21 +98,17 @@
             Luggage
             @endif
             </h1>
-            <p style="display: inline-block; margin-right: 10px;font-size:16px;font-weight:600;color:gray;">(
-                @if($tag->category === 'kid' || $tag->category === 'pet')
-                {{ ucfirst($tag->gender) }}
-                @else
-                {{$tag->luggageType}}
-                @endif
-                
-            ) 
+            <p style="display: inline-block; margin-right: 10px;font-size:16px;font-weight:600;color:gray;">
+                <!-- @if($tag->lost_mode === 1)
+                (Lost)
+                @endif  -->
             <div class="btns">
-                <div id="locationButton"  class="shareBox1" style="cursor:pointer;" onclick="getLocation()">
-                   <button>
-                   <img width="20" height="20" src="/images/new-location.png" style="vertical-align:middle;"/>
-                    <p style="margin:0;margin-top:-1px;display: inline-block; font-size:12px;font-weight:400;color:rgba(255,73,73,1); margin-right: 15px;;vertical-align:middle;">Allow</p>
+               <div id="locationButton" class="shareBox1" style="cursor:pointer;" onclick="getLocation()">
+                  <button id="changeLocation">
+                    <img width="20" height="20" src="/images/new-location.png" style="vertical-align:middle;"/>
                    </button>
-                </div>
+                 <p id="location-text" style="margin:0;margin-top:-1px;display: inline-block; font-size:12px;font-weight:400;color:rgba(255,73,73,1); margin-right: 15px;;vertical-align:middle;">Allow</p>
+               </div>
 
                 <div class="share-box2" style="cursor:pointer;" onclick="openModal()">
                     <button>
@@ -113,9 +124,13 @@
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
 
+       
         <div class="logo2">
-        <img src="/images/Tapz.png" alt="">
-    </div>
+           <img src="/images/Tapz.png" alt="">
+        </div>
+        
+
+
 
        <div class="modal-image">
         <img src="/{{ $image->path }}" alt="">
@@ -163,9 +178,9 @@
             
             <p style=";display: inline-block;margin-top:-1px;margin-left:6px;font-size:12px;font-weight:400;color:gray;vertical-align:middle;word-wrap:break-word;max-width: 170px;">
             @if($tag->category === 'pet' || $tag->category === 'luggage')
-            {{ucfirst($tag->ownerName)}}
+            {{$tag->ownerName}}
             @else
-            {{ucfirst($tag->fatherName)}}
+            {{$tag->fatherName}}
             @endif
             </p>
             
@@ -178,7 +193,7 @@
                   <img src="/images/location.png" alt=""  style="width:24px;height:24px;margin-top:-4px;>
                 </div>
               <div style="flex-grow: 1;">
-                <p style="  margin:0;margin-left:11px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;vertical-align:middle;float:right; max-width: 175px;"  >{{ucfirst($tag->address)}}</p>
+                <p style="  margin:0;margin-left:11px;font-size:12px;font-weight:500;color:gray;word-wrap:break-word;vertical-align:middle;float:right; max-width: 175px;"  >{{$tag->address}}</p>
                </div>
         </div>
 
@@ -337,7 +352,7 @@
     <div class="additional-info">
     <div class="grid">
     <div>
-        <p class="heading" style="font-weight: 500;padding-left:10px;">Mobile Number</p>
+        <p class="heading" style="font-weight: 500;padding-left:12px;">Mobile Number</p>
         <a  style="text-decoration:none;" href="tel:{{$tag->mobileNumber}}" class="additional-info-value">{{$tag->mobileNumber}}</a>
     </div>
    
@@ -350,38 +365,47 @@
         @endif
     </div>
    
-    <div>
-        <p class="heading" style="font-weight: 500;padding-left:10px;">Email</p>
-        <p class="additional-info-value">{{$tag->contactEmail}}</p>
-    </div>
+    
  
 </div>
 
+<div>
+        <p class="heading" style="font-weight: 500;padding-left:12px;">Email</p>
+        <p class="additional-info-value" style="word-wrap:break-word;">{{$tag->contactEmail}}</p>
+    </div>
+
 
         <div>
-        <p class="heading" style="font-weight: 500;margin-top:24px;margin-bottom:3px;padding-left:10px;">Address</p>
-        <p class="additional-info-value">{{$tag->address}}</p>
+        <p class="heading" style="font-weight: 500;margin-top:10px;margin-bottom:3px;padding-left:12px;">Address</p>
+        <p class="additional-info-value" style="">{{$tag->address}}</p>
     </div>
 
         @if($tag->category === 'pet')
-        <div style="margin-top:5px ">
+                @if(isset($tag->vetDetail) && !empty($tag->vetDetail))
+                <div style="margin-top:5px ">
             <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;">Vet Details</p>
             <p class="additional-info-value">{{$tag->vetDetail}}</p>
         </div>
+                @endif
         @elseif($tag->category === 'kid')
-        <div style="margin-top:5px ">
+
+            @if(isset($tag->doctorDetail) && !empty($tag->doctorDetail))
+                <div style="margin-top:5px ">
             <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;">Doctor Detail</p>
             <p class="additional-info-value">{{$tag->doctorDetail}}</p>
         </div>
+                @endif
 
         @endif
 
         @if($tag->category === 'pet' || $tag->category === 'kid')
 
-        <div style="margin-top:5px ">
-            <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;;">Medical Issue</p>
-            <p class="additional-info-value">{{$tag->medicalIssue}}</p>
-        </div>
+                @if(isset($tag->medicalIssue) && !empty($tag->medicalIssue))
+                    <div style="margin-top:5px ">
+                <p  style=" margin:0;margin-top:24px;margin-bottom:3px;font-size:16px;font-weight:500;padding-left:10px;;">Medical Issue</p>
+                <p class="additional-info-value">{{$tag->medicalIssue}}</p>
+                </div>
+                @endif
 
         @endif
 

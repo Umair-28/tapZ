@@ -115,6 +115,15 @@
     margin: 0 auto;
   }
 
+  .lost-logo{ 
+    position: absolute;
+    left: 34%;
+    margin-left: 30px;
+    top:60px;
+    transform: translate(-50%,-50%);
+    z-index: 1;
+  }
+
   .logo2{
     position: absolute;
     left: 50%;
@@ -126,6 +135,21 @@
   .logo2 img{
     width: 70px;
     height: 35px;
+  }
+
+  .lost-lost{
+    position: absolute;
+    right: 20%;
+    top:60px;
+  
+    transform: translate(-50%,-50%);
+    z-index: 1;
+  }
+  
+  .lost-lost img{
+    width: 80px;
+    height: 40px;
+    margin-right: 35px;
   }
 
   
@@ -171,7 +195,7 @@
     display: flex; /* Use flexbox for layout */
     overflow-x: auto; /* Enable horizontal scrolling */
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin: 20px auto;
     padding-bottom: 10px; /* Add some bottom padding to prevent horizontal scrollbar from overlapping content */
   }
@@ -222,9 +246,10 @@
     font-weight:500;
     color:gray;
     margin-top:4px;
-    padding-left:10px;
+    padding-left:13px;
     padding-right: 10px;
   }
+  
 
   .grid{
     display: grid; 
@@ -388,19 +413,23 @@ left: 20px;
   border:1px solid black;
   margin-top:2px;
   margin-left: -2px;
-  
+  width: 87px;
   border-radius:20px;
-  padding:4px 8px;
+  padding-top:4px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 5px;
   border-color:rgba(255,73,73,1);
 }
 .share-box2{
   float:right;
   border:1px solid black;
   margin-top:40px;
-  margin-right:-92px;
+  margin-right:-100px;
   border-radius:20px;
   padding:3px 10px;
   border-color:rgba(255,73,73,1);
+  width: 81px;
    
 }
 
@@ -486,6 +515,27 @@ h1{
     font-weight:700;
 }
 
+.lost-logo{
+  position: absolute;
+  left: 20%;
+  top:60px;
+  transform: translate(-50%,-50%);
+  z-index: 1;
+}
+.lost-lost{
+  position: absolute;
+  right: 2%;
+  top:60px;
+
+  transform: translate(-50%,-50%);
+  z-index: 1;
+}
+
+.lost-lost img{
+  width: 80px;
+  height: 40px;
+}
+
 /* .info-tags{
   display: flex;
   align-items: center;
@@ -542,7 +592,7 @@ h1{
   display: flex; /* Use flexbox for layout */
   overflow-x: visible; /* Enable horizontal scrolling */
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin: 14px auto;
   margin-left: 10px;
   padding-bottom: 10px; /* Add some bottom padding to prevent horizontal scrollbar from overlapping content */
@@ -610,8 +660,11 @@ h1{
   font-weight:500;
   color:gray;
   margin-top:4px;
-  padding-left:10px;
+
   padding-right: 10px;
+}
+.additional-info-value:last-child{
+  padding-left: 12px;
 }
 
 
@@ -736,7 +789,11 @@ h1{
   margin-left: -6px;
   margin-right: 10px;
   border-radius:20px;
-  padding:4px 7px;
+  padding-top:4px;
+  width: 87px;
+  padding-bottom: 4px;
+  padding-left: 7px;
+  padding-right: 0px;
   border-color:rgba(255,73,73,1);
 }
 
@@ -744,9 +801,15 @@ h1{
   float:right;
   border:1px solid black;
   margin-top:40px;
-  margin-right:-83px;
+  margin-right:-90px;
+  /* margin-right:-94px; */
+  width: 87px;
   border-radius:20px;
-  padding:3px 8px;
+  padding-top:4px;
+
+  padding-bottom: 4px;
+  padding-left: 7px;
+  padding-right: 0px;
   border-color:rgba(255,73,73,1);
   cursor: pointer;
    
