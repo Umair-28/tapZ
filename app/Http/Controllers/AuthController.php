@@ -242,4 +242,22 @@ class AuthController extends Controller
         return response()->json(["status"=>false, "message"=> "user not found"],404);
     }
 
+
+    public function logout(Request $request)
+    {
+        // Get the current authenticated user
+        $user = Auth::user();
+
+        if ($user) {
+            // Revoke the token that was used to authenticate the current request
+            $user->currentAccessToken()->delete();
+            $user->update([
+                'fcmToken' => "",
+            ]);
+            $user->save();
+        }
+
+        return response()->json(['status'=>true,'message' => 'Successfully logged out'], 200);
+    }
+
 }

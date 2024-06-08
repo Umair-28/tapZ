@@ -208,14 +208,19 @@ class TagController extends Controller
         $user = Auth::user();
         $userId = $user->id;
         $data = Tag::where('userId', $userId)->get();
+       
 
         $kidArray = [];
         $petArray = [];
         $luggageArray = [];
 
         foreach ($data as $record) {
+          
             $record = $this->formatChecker($record);
-            $image = Image::where('tagId', $record->id)->first();
+            $image = Image::where('tagId', $record->id)->get();
+           
+           
+            
 
             $recordData = [
                 'id' => $record->id,
@@ -245,15 +250,29 @@ class TagController extends Controller
                 'images' => []
             ];
 
-            if ($image) {
-                $recordData['images'][] = [
-                    'id' => $image->id,
-                    'imageUrl' => url($image->path)
-                ];
+            foreach($image as $img){
+                
+                if ($img) {
+                  
+                    $recordData['images'][] = [
+                        'id' => $img->id,
+                        'imageUrl' => url($img->path)
+                    ];
+                }
             }
+           
+
+            // if ($image) {
+            //     dd($image->id);
+            //     $recordData['images'][] = [
+            //         'id' => $image->id,
+            //         'imageUrl' => url($image->path)
+            //     ];
+            // }
 
             // Add the record data to the respective category array
             if ($record->category === 'kid') {
+                
                 $kidArray[] = $recordData;
             } elseif ($record->category === 'pet') {
                 $petArray[] = $recordData;
